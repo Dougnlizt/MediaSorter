@@ -5,6 +5,17 @@
  */
 package imageSorter;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.ComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author dougthompson
@@ -16,6 +27,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
      */
     public ImageSorterFrame() {
         initComponents();
+        initMyComponents();
     }
 
     /**
@@ -29,15 +41,15 @@ public class ImageSorterFrame extends javax.swing.JFrame {
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        jButtonBrowseMoveTo = new javax.swing.JButton();
+        jButtonBrowseSource = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton3 = new javax.swing.JButton();
+        jComboBoxSource = new javax.swing.JComboBox<>();
+        jButtonBrowseDeleteTo = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        jComboBoxMoveToDestination = new javax.swing.JComboBox<>();
+        jComboBoxDeleteToDestination = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -59,17 +71,17 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setOneTouchExpandable(true);
 
-        jButton2.setText("...");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonBrowseMoveTo.setText("...");
+        jButtonBrowseMoveTo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButtonBrowseMoveToActionPerformed(evt);
             }
         });
 
-        jButton1.setText("...");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonBrowseSource.setText("...");
+        jButtonBrowseSource.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonBrowseSourceActionPerformed(evt);
             }
         });
 
@@ -77,20 +89,20 @@ public class ImageSorterFrame extends javax.swing.JFrame {
 
         jCheckBox1.setText("Auto create and organize by year\\month");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "\\Volumes\\External Hard Drive\\Brandon\\MyPictures\\", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxSource.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "\\Volumes\\External Hard Drive\\Brandon\\MyPictures\\", "Item 2", "Item 3", "Item 4" }));
 
-            jButton3.setText("...");
-            jButton3.addActionListener(new java.awt.event.ActionListener() {
+            jButtonBrowseDeleteTo.setText("...");
+            jButtonBrowseDeleteTo.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    jButton3ActionPerformed(evt);
+                    jButtonBrowseDeleteToActionPerformed(evt);
                 }
             });
 
             jLabel1.setText("Source Directory:");
 
-            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "\\Volumes\\External Hard Drive\\Pictures\\Brandon\\Sorted\\", "Item 2", "Item 3", "Item 4" }));
+            jComboBoxMoveToDestination.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "\\Volumes\\External Hard Drive\\Pictures\\Brandon\\Sorted\\", "Item 2", "Item 3", "Item 4" }));
 
-                jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "\\Volumes\\External Hard Drive\\Brandon\\Deleted\\", "Item 2", "Item 3", "Item 4" }));
+                jComboBoxDeleteToDestination.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "\\Volumes\\External Hard Drive\\Brandon\\Deleted\\", "Item 2", "Item 3", "Item 4" }));
 
                     jLabel3.setText("'Delete' Directory:");
 
@@ -105,16 +117,16 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                                     .addGap(13, 13, 13)
                                     .addComponent(jLabel3)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jComboBoxDeleteToDestination, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jButtonBrowseDeleteTo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                     .addGap(17, 17, 17)
                                     .addComponent(jLabel1)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jComboBoxSource, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jButtonBrowseSource, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addComponent(jLabel2)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -124,9 +136,9 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                                             .addComponent(jCheckBox1)
                                             .addGap(0, 0, Short.MAX_VALUE))
                                         .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(jComboBox2, 0, 425, Short.MAX_VALUE)
+                                            .addComponent(jComboBoxMoveToDestination, 0, 425, Short.MAX_VALUE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                            .addComponent(jButtonBrowseMoveTo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addContainerGap())
                     );
                     jPanel2Layout.setVerticalGroup(
@@ -135,20 +147,20 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                             .addContainerGap()
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel1)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jButton1))
+                                .addComponent(jComboBoxSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButtonBrowseSource))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel2)
-                                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jButton2))
+                                .addComponent(jComboBoxMoveToDestination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButtonBrowseMoveTo))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jCheckBox1)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel3)
-                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jButton3))
+                                .addComponent(jComboBoxDeleteToDestination, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButtonBrowseDeleteTo))
                             .addContainerGap())
                     );
 
@@ -207,6 +219,11 @@ public class ImageSorterFrame extends javax.swing.JFrame {
 
                     jButton4.setFont(new java.awt.Font("Lucida Grande", 0, 48)); // NOI18N
                     jButton4.setText("Move");
+                    jButton4.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            jButton4ActionPerformed(evt);
+                        }
+                    });
 
                     jButton5.setFont(new java.awt.Font("Lucida Grande", 0, 48)); // NOI18N
                     jButton5.setText("Delete");
@@ -293,21 +310,25 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                     pack();
                 }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButtonBrowseSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowseSourceActionPerformed
+        selectSource();
+    }//GEN-LAST:event_jButtonBrowseSourceActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void jButtonBrowseMoveToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowseMoveToActionPerformed
+        selectMoveTo();
+    }//GEN-LAST:event_jButtonBrowseMoveToActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void jButtonBrowseDeleteToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowseDeleteToActionPerformed
+        selectDeleteTo();
+    }//GEN-LAST:event_jButtonBrowseDeleteToActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -345,15 +366,15 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButtonBrowseDeleteTo;
+    private javax.swing.JButton jButtonBrowseMoveTo;
+    private javax.swing.JButton jButtonBrowseSource;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
+    private javax.swing.JComboBox<String> jComboBoxDeleteToDestination;
+    private javax.swing.JComboBox<String> jComboBoxMoveToDestination;
+    private javax.swing.JComboBox<String> jComboBoxSource;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -372,4 +393,108 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+    private final String homeDir = System.getProperty("user.home");
+    private List<Path> selectSourceList = new ArrayList<>(); 
+    private final String sourceFileName = "imageSorterSourcePaths.txt";
+    private List<Path> moveToList = new ArrayList<>(); 
+    private final String moveToFileName = "imageSorterMoveToPaths.txt";
+    private List<Path> deleteToList = new ArrayList<>(); 
+    private final String deleteToFileName = "imageSorterDeleteToPaths.txt";
+    
+    private void initMyComponents() {
+        getPaths(sourceFileName, selectSourceList);
+        populateComboBox(selectSourceList, jComboBoxSource);
+
+        getPaths(moveToFileName, moveToList);
+        populateComboBox(moveToList, jComboBoxMoveToDestination);
+
+        getPaths(deleteToFileName, deleteToList);
+        populateComboBox(deleteToList, jComboBoxDeleteToDestination);
+    }
+    
+    private void selectSource() {
+        selectDir(jComboBoxSource, selectSourceList);
+        savePaths(selectSourceList, sourceFileName);
+    }
+    
+    private void selectMoveTo() {
+        selectDir(jComboBoxMoveToDestination, moveToList);
+        savePaths(moveToList, moveToFileName);
+    }
+    
+    private void selectDeleteTo() {
+        selectDir(jComboBoxDeleteToDestination, deleteToList);
+        savePaths(deleteToList, deleteToFileName);
+    }
+
+    private void selectDir(JComboBox<String> comboBox, List<Path> comboList) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        String selectedSource = (String) comboBox.getSelectedItem();
+        Path currPath = null;
+        if (selectedSource != null) {
+            currPath = Paths.get(selectedSource);
+        }
+        if (currPath != null) {
+            chooser.setCurrentDirectory(currPath.toFile());
+        }
+        int returnValue = chooser.showDialog(this, "Select Dir");
+        switch(returnValue) {
+            case JFileChooser.CANCEL_OPTION:
+                return;
+            case JFileChooser.ERROR_OPTION:
+                JOptionPane.showMessageDialog(this, "There was an error", "Error Selecting Directory", JOptionPane.OK_OPTION);
+                return;
+            case JFileChooser.APPROVE_OPTION:
+                break;
+        }
+        File dirItem = chooser.getSelectedFile();
+        Path newPath = dirItem.toPath();
+        
+        if (newPath != null) {
+            //Add it to the list and refresh the combo box
+            comboList.add(0, newPath);
+            populateComboBox(comboList, comboBox);
+        }
+    }
+    
+    private void getPaths(String fileName, List<Path> pathsList) {
+        try {
+            ArrayList<String> directoriesList = FileUtilities.readLinesFromFile(Paths.get(homeDir, fileName));
+            pathsList.clear();
+            for (String pref : directoriesList) {
+                pathsList.add(Paths.get(pref));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void populateComboBox(List<Path> pathList, JComboBox<String> comboBox) {        
+        comboBox.removeAllItems();
+        if (pathList.size() > 10) {
+            pathList = pathList.subList(0, 9);
+        }
+        for (Path path : pathList) {
+            comboBox.addItem(path.toString());
+        }
+    }
+    
+    private void savePaths(List<Path> pathList, String fileName) {
+        StringBuffer stringToWrite = new StringBuffer("");
+        for (Path source : pathList) {
+            stringToWrite.append(source.toString()).append("\n");
+        }        
+        Path fileDest = Paths.get(homeDir, fileName);
+        try {
+            FileUtilities.writeStringToFile(fileDest, stringToWrite, false);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Problem saving paths:  " + ex.getMessage(), 
+                    "Issue Saving Paths", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
+    
+
 }
