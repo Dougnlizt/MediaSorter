@@ -447,6 +447,10 @@ public class FileUtilities {
         }
 
         if (!isDestFileSame(srcPath.toFile(), destPath.toFile())) {
+            //Make sure the destination path exists
+            if (!destPath.toFile().exists()) {
+                destPath.toFile().mkdirs();
+            }
             // copy the file
             Files.copy(srcPath, destPath,
                     StandardCopyOption.REPLACE_EXISTING,
@@ -470,15 +474,15 @@ public class FileUtilities {
      * @return Array of Files matching the criteria. If sourceDir is a file,
      * then an empty list is returned.
      */
-    private static ArrayList<File> getDirFiles(File sourceDir, boolean recursive, FileFilter filter) {
+    private static ArrayList<File> getDirFiles(File sourceDir, boolean recursive, FilenameFilter filter) {
         ArrayList<File> fileList = new ArrayList<>();
         if (sourceDir.isDirectory()) {
             String[] children;
-            //if (filter != null) {
-            //    children = sourceDir.list(filter);
-            //} else {
+            if (filter != null) {
+                children = sourceDir.list(filter);
+            } else {
                 children = sourceDir.list();
-            //}
+            }
             File tempFile;
             for (int i = 0; i < children.length; i++) {
                 tempFile = new File(sourceDir, children[i]);
@@ -493,7 +497,7 @@ public class FileUtilities {
         return fileList;
     }
 
-    public static ArrayList<Path> getDirFiles(Path sourceDir, boolean recursive, FileFilter filter) {
+    public static ArrayList<Path> getDirFiles(Path sourceDir, boolean recursive, FilenameFilter filter) {
         ArrayList<File> fileList = getDirFiles(sourceDir.toFile(), recursive, filter);
         ArrayList<Path> pathList = new ArrayList<>();
         for (File files : fileList) {
