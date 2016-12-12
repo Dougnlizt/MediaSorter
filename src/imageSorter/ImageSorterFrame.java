@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.AbstractAction;
@@ -35,6 +36,7 @@ import javax.swing.KeyStroke;
 import static javax.swing.KeyStroke.getKeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import jdk.nashorn.internal.objects.NativeNumber;
 
 /**
  *
@@ -101,6 +103,11 @@ public class ImageSorterFrame extends javax.swing.JFrame {
 
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setOneTouchExpandable(true);
+        jSplitPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jSplitPane1MouseClicked(evt);
+            }
+        });
 
         jButtonBrowseMoveTo.setText("...");
         jButtonBrowseMoveTo.addActionListener(new java.awt.event.ActionListener() {
@@ -187,7 +194,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                                             .addComponent(jCheckBoxAutoCreateDirs)
                                             .addGap(0, 0, Short.MAX_VALUE))
                                         .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(jComboBoxMoveToDestination, 0, 508, Short.MAX_VALUE)
+                                            .addComponent(jComboBoxMoveToDestination, 0, 640, Short.MAX_VALUE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(jButtonBrowseMoveTo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addContainerGap())
@@ -233,7 +240,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                         }
                     });
 
-                    jSliderBrowsePictures.setValue(6);
+                    jSliderBrowsePictures.setToolTipText("");
+                    jSliderBrowsePictures.setValue(0);
 
                     javax.swing.GroupLayout imageLabelLayout = new javax.swing.GroupLayout(imageLabel);
                     imageLabel.setLayout(imageLabelLayout);
@@ -347,10 +355,11 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                             .addContainerGap()
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addGap(254, 254, 254)
+                                    .addComponent(jLabelXofY, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
+                                    .addGap(20, 20, 20)
                                     .addComponent(jButtonMove, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(149, 149, 149)
-                                    .addComponent(jLabelXofY, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGap(143, 143, 143)
+                                    .addGap(18, 18, 18)
                                     .addComponent(jButtonDelete))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -365,7 +374,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                                             .addGap(18, 18, 18)
                                             .addComponent(jLabel10)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jTextFieldFilename, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTextFieldFilename)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(jLabelFilenameExtension)))
                                     .addGap(36, 36, 36)
@@ -502,6 +511,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
 
     private void jCheckBoxAutoCreateDirsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxAutoCreateDirsActionPerformed
         updateDestinationLabel();
+        saveSettings();
     }//GEN-LAST:event_jCheckBoxAutoCreateDirsActionPerformed
 
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
@@ -542,6 +552,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
 
     private void jTextFieldDirNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDirNameKeyTyped
         updateDestinationLabel();
+        saveSettings();
     }//GEN-LAST:event_jTextFieldDirNameKeyTyped
 
     private void jTextFieldFilenameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFilenameKeyTyped
@@ -550,11 +561,16 @@ public class ImageSorterFrame extends javax.swing.JFrame {
 
     private void jTextFieldDirNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDirNameKeyReleased
         updateDestinationLabel();
+        saveSettings();
     }//GEN-LAST:event_jTextFieldDirNameKeyReleased
 
     private void jTextFieldFilenameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFilenameKeyReleased
         updateDestinationLabel();
     }//GEN-LAST:event_jTextFieldFilenameKeyReleased
+
+    private void jSplitPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSplitPane1MouseClicked
+        saveSettings();
+    }//GEN-LAST:event_jSplitPane1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -640,6 +656,10 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private final String moveToFileName = "imageSorterMoveToPaths.txt";
     private List<Path> deleteToList = new ArrayList<>(); 
     private final String deleteToFileName = "imageSorterDeleteToPaths.txt";
+    private final String toolSettingsFileName = "imageSorterSettings.txt";
+    private final static String CREATE_DATE_DIR = "Create Year and Month Directory";
+    private final static String SUB_DIR_TEXT = "Sub directory text to use with date directory";
+    private final static String HIDE_TOP_PART = "Collapse the top componnet";
     private static boolean initializing = false;
     private ArrayList<Path> filesList;
     private int fileIndex;
@@ -662,6 +682,9 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     //Action - Undo
     
     private void initMyComponents() {
+        jCheckBoxAutoCreateDirs.setSelected(true);
+        setTitle("Image Sorter Version 0.1");
+
         int selectedIndex = getPaths(sourceFileName, selectSourceList);
         populateComboBox(selectSourceList, jComboBoxSource, selectedIndex);
 
@@ -670,6 +693,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
 
         selectedIndex = getPaths(deleteToFileName, deleteToList);
         populateComboBox(deleteToList, jComboBoxDeleteToDestination, selectedIndex);
+        
+        getSettings();
         
         getSourceFiles();
         
@@ -864,8 +889,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
             setImage();
             resetSlider(1);
         } else {
-            jLabelXofY.setText("No images in this directory");
-            imageLabel.setImage(null);
+            setNoImage();
         }
     }
     
@@ -891,6 +915,10 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     
     private void setImage() {
         jLabelXofY.setText((fileIndex + 1) + " of " + filesList.size());
+        if (fileIndex < 0) {
+            setNoImage();
+            return;
+        }
         Path imageFile = filesList.get(fileIndex);
         ImageIcon imageIcon = new ImageIcon(imageFile.toString());
         imageLabel.setImage(imageIcon.getImage());
@@ -904,18 +932,64 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         jLabelYear.setText(year);
         jLabelMonth.setText(month);
         resetSlider(fileIndex + 1);
-        Path destination = getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), null);
+        Path destination = getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), FileMoveType.MOVE);
         jLabelDestination.setText(destination.toString());
+    }
+    
+    private void setNoImage() {
+        jLabelXofY.setText("No images in this directory");
+        imageLabel.setImage(null);
+        jTextFieldFilename.setText(null);
+        jLabelFilenameExtension.setText(null);
+        jLabelYear.setText(null);
+        jLabelMonth.setText(null);
+        jLabelDestination.setText(null);
+        String dirToDelete = (String) jComboBoxSource.getSelectedItem();
+        Path deletePath = Paths.get(dirToDelete);
+        String[] fileList = deletePath.toFile().list();
+        if (fileList == null) {
+            JOptionPane.showMessageDialog(this, "Cannot find\n\n\t" + dirToDelete, "Directory Not Found", JOptionPane.ERROR_MESSAGE);
+        } else {
+            boolean isEmpty = fileList.length < 1;
+            if (isEmpty) {
+                int response = JOptionPane.showConfirmDialog(this, "The directory \n\n\t" + dirToDelete + "\n\nis empty.  Do you want to delete it?", "Empty Directory",
+                                                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (response == JOptionPane.YES_OPTION) {
+                    boolean deleteSuccessful = FileUtilities.deleteDirectory(Paths.get(dirToDelete).toFile());
+                    if (deleteSuccessful) {
+                        //Remove it from the remembered list of dirs
+                        for (Iterator<Path> iterator = selectSourceList.iterator(); iterator.hasNext();) {
+                            String pathStr = iterator.next().toString();
+                            if (pathStr.equals(dirToDelete)) {
+                                iterator.remove();
+                            }
+                        }
+                        //Need to save and rebuild
+                        if (jComboBoxSource.getSelectedIndex() > -1) {
+                            jComboBoxSource.remove(jComboBoxSource.getSelectedIndex());
+                        }            
+                        savePaths(selectSourceList, sourceFileName, jComboBoxSource);
+                        int selectedIndex = getPaths(sourceFileName, selectSourceList);
+                        populateComboBox(selectSourceList, jComboBoxSource, selectedIndex);
+                        getSourceFiles();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Unable to delete the directory.  Not sure why, though.", "Directory Could Not Be Deleted", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "The directory\n\n\t" + dirToDelete + "\n\nis not empty, but there are no images.", "No Images Found", JOptionPane.WARNING_MESSAGE);
+            }
+        }
     }
     
     private void selectMoveTo() {
         selectDir(jComboBoxMoveToDestination, moveToList);
-        savePaths(moveToList, moveToFileName, null);
+        savePaths(moveToList, moveToFileName, jComboBoxMoveToDestination);
     }
     
     private void selectDeleteTo() {
         selectDir(jComboBoxDeleteToDestination, deleteToList);
-        savePaths(deleteToList, deleteToFileName, null);
+        savePaths(deleteToList, deleteToFileName, jComboBoxDeleteToDestination);
     }
     
     private void selectFileNameField() {
@@ -959,7 +1033,9 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         try {
             ArrayList<String> directoriesList = FileUtilities.readLinesFromFile(Paths.get(homeDir, fileName));
             pathsList.clear();
+            List<String> prefsList = new ArrayList<>();
             for (String pref : directoriesList) {
+                if (prefsList.contains(pref)) continue;
                 if (selectedIndex == -10) {
                     try {
                         selectedIndex = Integer.parseInt(pref);
@@ -969,6 +1045,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                     }
                 }
                 pathsList.add(Paths.get(pref));
+                prefsList.add(pref);
             }
         } catch (Exception ex2) {
             ex2.printStackTrace();
@@ -990,7 +1067,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     }
     
     private void updateDestinationLabel() {
-        Path destinationPath = getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), null);
+        Path destinationPath = getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), FileMoveType.MOVE);
         jLabelDestination.setText(destinationPath.toString());
     }
     
@@ -1037,6 +1114,48 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Problem saving paths:  " + ex.getMessage(), 
                     "Issue Saving Paths", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }
+    
+    private void getSettings() {
+        try {
+            ArrayList<String> settingsList = FileUtilities.readLinesFromFile(Paths.get(homeDir, toolSettingsFileName));
+            String temp;
+            for (String pref : settingsList) {
+                String[] setting = pref.split(",");
+                if (setting.length < 2) continue;
+                temp = setting[1];
+                if (null != setting[0]) switch (setting[0]) {
+                    case CREATE_DATE_DIR:
+                        jCheckBoxAutoCreateDirs.setSelected(Boolean.valueOf((String) temp));
+                        break;
+                    case SUB_DIR_TEXT:
+                        jTextFieldDirName.setText(setting[1]);
+                        break;
+                    case HIDE_TOP_PART:
+                        jSplitPane1.setDividerLocation(Integer.parseInt(setting[1]));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } catch (Exception ex) {
+            
+        }
+    }
+    
+    private void saveSettings() {
+        StringBuffer stringToWrite = new StringBuffer("");
+        stringToWrite.append(CREATE_DATE_DIR).append(",").append(jCheckBoxAutoCreateDirs.isSelected()).append("\n");
+        stringToWrite.append(SUB_DIR_TEXT).append(",").append(jTextFieldDirName.getText()).append("\n");
+        stringToWrite.append(HIDE_TOP_PART).append(",").append(jSplitPane1.getDividerLocation()).append("\n");
+        Path fileDest = Paths.get(homeDir, toolSettingsFileName);
+        try {
+            FileUtilities.writeStringToFile(fileDest, stringToWrite, false);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Problem saving settings:  " + ex.getMessage(), 
+                    "Issue Saving Settings", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
     }
