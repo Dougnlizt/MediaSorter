@@ -5,6 +5,8 @@
  */
 package imageSorter;
 
+import java.awt.Color;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -663,6 +666,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private static boolean initializing = false;
     private ArrayList<Path> filesList;
     private int fileIndex;
+    private Color defaultFG_Color;
+    private static final String NEW_LINE = System.lineSeparator();
     
     private enum FileMoveType {
         MOVE("Move", "Moving"),
@@ -680,10 +685,14 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     }
     //File - Exit
     //Action - Undo
+    //Version 0.2 Feb 3rd 2017: Fixed an error of 'null' with the destination path that can occur
+    //                          Allow the custom dir to be used when not creating year/month in path
+    //                          Check for the destination file.  Prompt to continue if it exists.
     
     private void initMyComponents() {
+        defaultFG_Color = jLabelDestination.getForeground();
         jCheckBoxAutoCreateDirs.setSelected(true);
-        setTitle("Image Sorter Version 0.1");
+        setTitle("Image Sorter Version 0.2");
 
         int selectedIndex = getPaths(sourceFileName, selectSourceList);
         populateComboBox(selectSourceList, jComboBoxSource, selectedIndex);
@@ -932,8 +941,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         jLabelYear.setText(year);
         jLabelMonth.setText(month);
         resetSlider(fileIndex + 1);
-        Path destination = getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), FileMoveType.MOVE);
-        jLabelDestination.setText(destination.toString());
+        updateDestinationLabel();
     }
     
     private void setNoImage() {
@@ -1068,10 +1076,21 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     
     private void updateDestinationLabel() {
         Path destinationPath = getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), FileMoveType.MOVE);
-        jLabelDestination.setText(destinationPath.toString());
+        if (destinationPath != null) {
+            if (destinationPath.toFile().exists()) {
+                jLabelDestination.setForeground(Color.red);
+                jLabelDestination.setToolTipText("A file with the same name already exists at the destination");
+            } else {
+                jLabelDestination.setForeground(defaultFG_Color);
+                jLabelDestination.setToolTipText("Full path and name of the destination");
+            }
+            jLabelDestination.setText(destinationPath.toString());
+        }
     }
     
     private Path getDestination(String destination, FileMoveType moveType) {
+        if ((fileIndex + 1 > filesList.size())
+                || destination == null) return null;
         Path sourceFile = filesList.get(fileIndex);
         Path moveToPathAndFile = Paths.get(destination);
         if (jCheckBoxAutoCreateDirs.isSelected()
@@ -1088,6 +1107,11 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                 month = month + "_" + jTextFieldDirName.getText().trim();
             }
             moveToPathAndFile = Paths.get(destination, year, month);
+        } else if (moveType != null && moveType == FileMoveType.MOVE) {
+            //check for a custom dir name
+            if (jTextFieldDirName.getText() != null && !jTextFieldDirName.getText().trim().isEmpty()) {
+                moveToPathAndFile = Paths.get(destination, jTextFieldDirName.getText().trim());
+            }
         }
         String fileExtension = jLabelFilenameExtension.getText();
         String fileName = jTextFieldFilename.getText();
@@ -1163,9 +1187,24 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     /*-----------------------------------------*/
     
     private void moveImage(Path destination, FileMoveType moveType) {
+        if (destination == null) return;
         //Get the file source
         Path sourceFile = filesList.get(fileIndex);
         try {
+            if (destination.toFile().exists()) {
+                Image bi = ImageIO.read(destination.toFile());
+                ImageIcon icon = new ImageIcon(bi.getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+                
+                //Check to see if they want ot overwrite it anyway...
+                int response = JOptionPane.showConfirmDialog(this, "A file with the same name already exists."
+                        + NEW_LINE + "Are you sure"
+                        + " you want to overwrite the destination file??"
+                        + NEW_LINE + "Overwriting cannot be undone...",
+                        "File Already Exists", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, icon);
+                if (response != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            }
             boolean success = FileUtilities.copyFile(sourceFile, destination);
             if (!success) throw new Exception("Are you sure the destination and source are different?");
             Files.delete(sourceFile);
