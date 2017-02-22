@@ -6,11 +6,15 @@
 package imageSorter;
 
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -39,7 +43,6 @@ import javax.swing.KeyStroke;
 import static javax.swing.KeyStroke.getKeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import jdk.nashorn.internal.objects.NativeNumber;
 
 /**
  *
@@ -668,6 +671,11 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private int fileIndex;
     private Color defaultFG_Color;
     private static final String NEW_LINE = System.lineSeparator();
+    private Path currentImageFilePath = null;
+    private MouseListener imageMouseListener = null;
+    private ImageSorterFrame thisObject = null;
+    private String imageExtensions = "jpgjpeggifpng";
+    private String videoExtensions = "mp4mov";
     
     private enum FileMoveType {
         MOVE("Move", "Moving"),
@@ -688,11 +696,42 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     //Version 0.2 Feb 3rd 2017: Fixed an error of 'null' with the destination path that can occur
     //                          Allow the custom dir to be used when not creating year/month in path
     //                          Check for the destination file.  Prompt to continue if it exists.
+    //Version 0.3 Feb xx 2017: Change the splash screen...
+    //Version 1.0 Feb 21 2017: Include mp4 and mov files.  Allow images and videos to be opened in the 
+    //                         OS native tool for viewing/playing
     
     private void initMyComponents() {
+        thisObject = this;
+        imageMouseListener = new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    Desktop.getDesktop().open(currentImageFilePath.toFile());
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(thisObject, "Unable to open file\n\n\t" + currentImageFilePath.getFileName().toString(), "Can't Open File", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                imageLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+        };
+        
+        imageLabel.addMouseListener(imageMouseListener);
+        
         defaultFG_Color = jLabelDestination.getForeground();
         jCheckBoxAutoCreateDirs.setSelected(true);
-        setTitle("Image Sorter Version 0.2");
+        setTitle("Image Sorter Version 1.0");
 
         int selectedIndex = getPaths(sourceFileName, selectSourceList);
         populateComboBox(selectSourceList, jComboBoxSource, selectedIndex);
@@ -888,7 +927,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
             public boolean accept(File dir, String name) {
                 String ext = FileUtilities.getExtension(new File(name));
                 if (ext == null) return false;
-                return "jpgjpeggifpng".contains(ext);
+                return (imageExtensions + videoExtensions).contains(ext);
             }
         };
                 
@@ -929,8 +968,16 @@ public class ImageSorterFrame extends javax.swing.JFrame {
             return;
         }
         Path imageFile = filesList.get(fileIndex);
-        ImageIcon imageIcon = new ImageIcon(imageFile.toString());
-        imageLabel.setImage(imageIcon.getImage());
+        currentImageFilePath = imageFile;
+        if (isImage(imageFile)) {
+            ImageIcon imageIcon = new ImageIcon(imageFile.toString());
+            imageLabel.setImage(imageIcon.getImage());
+            imageLabel.setToolTipText("Open image in image viewer");
+        } else {
+            ImageIcon imageIcon = new ImageIcon("./src/images/playVideo2.jpg");
+            imageLabel.setImage(imageIcon.getImage());
+            imageLabel.setToolTipText("Open/play video in player");
+        }
         jTextFieldFilename.setText(FileUtilities.getPrefix(imageFile.getFileName().toFile()));
         jLabelFilenameExtension.setText("." + FileUtilities.getExtension(imageFile.getFileName().toFile()));
         
@@ -942,6 +989,12 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         jLabelMonth.setText(month);
         resetSlider(fileIndex + 1);
         updateDestinationLabel();
+    }
+    
+    private boolean isImage(Path imageFile) {
+        Path pathFile = imageFile.getFileName();
+        String ext = pathFile.toString().substring(pathFile.toString().lastIndexOf(".") + 1);
+        return imageExtensions.contains(ext);
     }
     
     private void setNoImage() {
