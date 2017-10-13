@@ -5,12 +5,17 @@
  */
 package imageSorter;
 
+import imageSorter.CustomActionsDialog.CustomAction;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -32,15 +37,22 @@ import java.util.Locale;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import static javax.swing.KeyStroke.getKeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -66,6 +78,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
@@ -100,6 +113,9 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         jLabelDestination = new javax.swing.JLabel();
         jButtonBrowseDir = new javax.swing.JButton();
         jComboBoxDirName = new javax.swing.JComboBox<>();
+        jLabelStatus = new javax.swing.JLabel();
+        jPanelCustomActions = new javax.swing.JPanel();
+        jButtonCustomizeActions = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItemExit = new javax.swing.JMenuItem();
@@ -132,6 +148,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         });
 
         jLabel2.setText("'Move To' Directory:");
+        jLabel2.setToolTipText("When moving or copying, the location the pictures will be moved to");
 
         jCheckBoxAutoCreateDirs.setText("Auto create and organize by year\\month");
         jCheckBoxAutoCreateDirs.addActionListener(new java.awt.event.ActionListener() {
@@ -155,6 +172,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
             });
 
             jLabel1.setText("Source Directory:");
+            jLabel1.setToolTipText("Location of the pictures you want to sort, move, or delete");
 
             jComboBoxMoveToDestination.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "\\Volumes\\External Hard Drive\\Pictures\\Brandon\\Sorted\\", "Item 2", "Item 3", "Item 4" }));
                 jComboBoxMoveToDestination.addActionListener(new java.awt.event.ActionListener() {
@@ -171,6 +189,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                     });
 
                     jLabel3.setText("'Delete' Directory:");
+                    jLabel3.setToolTipText("When an image is 'deleted', it is moved to this location");
 
                     jCheckBoxCopyOnly.setText("Copy only - keep source file");
                     jCheckBoxCopyOnly.addActionListener(new java.awt.event.ActionListener() {
@@ -211,7 +230,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                                             .addComponent(jCheckBoxCopyOnly)
                                             .addGap(0, 0, Short.MAX_VALUE))
                                         .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(jComboBoxMoveToDestination, 0, 640, Short.MAX_VALUE)
+                                            .addComponent(jComboBoxMoveToDestination, 0, 563, Short.MAX_VALUE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(jButtonBrowseMoveTo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addContainerGap())
@@ -249,6 +268,12 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                         public void mouseClicked(java.awt.event.MouseEvent evt) {
                             jLabelNextMouseClicked(evt);
                         }
+                        public void mouseExited(java.awt.event.MouseEvent evt) {
+                            jLabelNextMouseExited(evt);
+                        }
+                        public void mouseEntered(java.awt.event.MouseEvent evt) {
+                            jLabelNextMouseEntered(evt);
+                        }
                     });
 
                     jLabelPrevious.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
@@ -257,10 +282,18 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                         public void mouseClicked(java.awt.event.MouseEvent evt) {
                             jLabelPreviousMouseClicked(evt);
                         }
+                        public void mouseExited(java.awt.event.MouseEvent evt) {
+                            jLabelPreviousMouseExited(evt);
+                        }
+                        public void mouseEntered(java.awt.event.MouseEvent evt) {
+                            jLabelPreviousMouseEntered(evt);
+                        }
                     });
 
                     jSliderBrowsePictures.setToolTipText("");
                     jSliderBrowsePictures.setValue(0);
+
+                    imageLabel.setPreferredSize(new java.awt.Dimension(200, 200));
 
                     javax.swing.GroupLayout imageLabelLayout = new javax.swing.GroupLayout(imageLabel);
                     imageLabel.setLayout(imageLabelLayout);
@@ -270,7 +303,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                     );
                     imageLabelLayout.setVerticalGroup(
                         imageLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 299, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                     );
 
                     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -285,13 +318,13 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabelNext)
                             .addGap(18, 18, 18))
-                        .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
                     );
                     jPanel1Layout.setVerticalGroup(
                         jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addContainerGap()
-                            .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jSliderBrowsePictures, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -384,6 +417,10 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                         }
                     });
 
+                    jLabelStatus.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+                    jLabelStatus.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                    jLabelStatus.setText("jLabel6");
+
                     javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
                     jPanel4.setLayout(jPanel4Layout);
                     jPanel4Layout.setHorizontalGroup(
@@ -392,8 +429,9 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                             .addContainerGap()
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel4Layout.createSequentialGroup()
-                                    .addGap(260, 260, 260)
-                                    .addComponent(jLabelXofY, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+                                    .addComponent(jLabelStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabelXofY, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
                                     .addGap(20, 20, 20)
                                     .addComponent(jButtonMove)
                                     .addGap(18, 18, 18)
@@ -413,7 +451,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                                             .addGap(18, 18, 18)
                                             .addComponent(jLabel10)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(jTextFieldFilename, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                                            .addComponent(jTextFieldFilename)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(jLabelFilenameExtension)))
                                     .addGap(36, 36, 36)
@@ -429,7 +467,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                                 .addComponent(jButtonMove)
                                 .addComponent(jLabelXofY)
-                                .addComponent(jButtonDelete))
+                                .addComponent(jButtonDelete)
+                                .addComponent(jLabelStatus))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                                 .addComponent(jLabel10)
@@ -447,6 +486,25 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                             .addContainerGap())
                     );
 
+                    jPanelCustomActions.setAutoscrolls(true);
+                    jPanelCustomActions.setLayout(new java.awt.GridBagLayout());
+
+                    jButtonCustomizeActions.setBackground(new java.awt.Color(49, 138, 37));
+                    jButtonCustomizeActions.setForeground(new java.awt.Color(255, 255, 255));
+                    jButtonCustomizeActions.setText("Modify Actions");
+                    jButtonCustomizeActions.setToolTipText("<html>Create and edit additional places<br/>to copy the image to</html>");
+                    jButtonCustomizeActions.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            jButtonCustomizeActionsActionPerformed(evt);
+                        }
+                    });
+                    gridBagConstraints = new java.awt.GridBagConstraints();
+                    gridBagConstraints.gridx = 0;
+                    gridBagConstraints.gridy = 0;
+                    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+                    gridBagConstraints.insets = new java.awt.Insets(6, 6, 312, 6);
+                    jPanelCustomActions.add(jButtonCustomizeActions, gridBagConstraints);
+
                     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
                     jPanel3.setLayout(jPanel3Layout);
                     jPanel3Layout.setHorizontalGroup(
@@ -454,15 +512,20 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                         .addGroup(jPanel3Layout.createSequentialGroup()
                             .addGap(6, 6, 6)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jPanelCustomActions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addContainerGap())
                     );
                     jPanel3Layout.setVerticalGroup(
                         jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel3Layout.createSequentialGroup()
                             .addContainerGap()
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanelCustomActions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addContainerGap())
@@ -559,7 +622,11 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
     private void jButtonMoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMoveActionPerformed
-        moveImage(getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), FileMoveType.MOVE), FileMoveType.MOVE);
+        if (jCheckBoxCopyOnly.isSelected()) {
+            moveImage(getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), FileMoveType.COPY), FileMoveType.COPY);
+        } else {
+            moveImage(getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), FileMoveType.MOVE), FileMoveType.MOVE);
+        }
     }//GEN-LAST:event_jButtonMoveActionPerformed
 
     private void jLabelPreviousMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelPreviousMouseClicked
@@ -642,6 +709,30 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jComboBoxDirNameItemStateChanged
 
+    private void jButtonCustomizeActionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCustomizeActionsActionPerformed
+        if (customActionsDialog == null) {
+            customActionsDialog = new CustomActionsDialog(this, true);
+        }
+        customActionsDialog.setVisible(true);
+        initCustomActions();
+    }//GEN-LAST:event_jButtonCustomizeActionsActionPerformed
+
+    private void jLabelNextMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelNextMouseEntered
+        jLabelNext.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_jLabelNextMouseEntered
+
+    private void jLabelNextMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelNextMouseExited
+        jLabelNext.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_jLabelNextMouseExited
+
+    private void jLabelPreviousMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelPreviousMouseEntered
+        jLabelPrevious.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_jLabelPreviousMouseEntered
+
+    private void jLabelPreviousMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelPreviousMouseExited
+        jLabelPrevious.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_jLabelPreviousMouseExited
+
     /**
      * @param args the command line arguments
      */
@@ -685,6 +776,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButtonBrowseDir;
     private javax.swing.JButton jButtonBrowseMoveTo;
     private javax.swing.JButton jButtonBrowseSource;
+    private javax.swing.JButton jButtonCustomizeActions;
     private javax.swing.JButton jButtonDelete;
     private javax.swing.JButton jButtonMove;
     private javax.swing.JCheckBox jCheckBoxAutoCreateDirs;
@@ -704,6 +796,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelMonth;
     private javax.swing.JLabel jLabelNext;
     private javax.swing.JLabel jLabelPrevious;
+    private javax.swing.JLabel jLabelStatus;
     private javax.swing.JLabel jLabelXofY;
     private javax.swing.JLabel jLabelYear;
     private javax.swing.JMenu jMenu1;
@@ -716,6 +809,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanelCustomActions;
     private javax.swing.JSlider jSliderBrowsePictures;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextField jTextFieldFilename;
@@ -749,10 +843,14 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private final static int MAX_DEST_ITEMS = 10;
     private final static int MAX_DELETE_ITEMS = 10;
     private final static int MAX_DIR_NAME_ITEMS = 20;
+    private CustomActionsDialog customActionsDialog = null;
     
     private enum FileMoveType {
         MOVE("Move", "Moving"),
-        DELETE("Delete", "Deleting");
+        COPY("Copy", "Copying"),
+        DELETE("Delete", "Deleting"),
+        COPY_CUSTOM("Copy Custom", "Copying"),
+        ;
         
         private String description;
         private String actionDescription;
@@ -776,8 +874,10 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     //                         When deleting, delete the source file even if the 'copy' checkbox is selected
     //                         Save up to 20 previously selected Dir Name values, while allowing a type-in vlaue
     //                         When looking for images, make the extension check case insensitive
+    //                         Add tooltips to provide additional descriptions
     
     private void initMyComponents() {
+        jPanelCustomActions.setLayout(new BoxLayout(jPanelCustomActions, BoxLayout.PAGE_AXIS));
         thisObject = this;
         imageMouseListener = new MouseListener() {
             @Override
@@ -911,7 +1011,108 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         
         jSliderBrowsePictures.addChangeListener(sliderChange);
         
+        initCustomActions();
+        
+        showStatusLabel.start();
     }
+    
+    private void initCustomActions() {
+        //Get all the custom action objects
+        if (customActionsDialog == null) {
+            customActionsDialog = new CustomActionsDialog(this, true);
+        }
+        List<CustomActionsDialog.CustomAction> customActions = customActionsDialog.getCustomActions();
+        GridBagConstraints gbc;
+        
+        int rowCount = 0;
+        
+        jPanelCustomActions.removeAll();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = rowCount ++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        jPanelCustomActions.add(jButtonCustomizeActions, gbc);
+        
+        Box.Filler gap = new Box.Filler(new Dimension(10, 15), new Dimension(10, 15), new Dimension(10, 15));
+        gbc.gridy = rowCount ++;
+        jPanelCustomActions.add(gap, gbc);
+        
+        //gbc.insets = new Insets(10, 10, 10, 10);
+
+        for (int i = 0; i < customActions.size(); i++) {
+            CustomAction customAction = customActions.get(i);
+            if (!customAction.enabled) continue;
+            JButton customSaveButton = new JButton(customAction.toString());
+            //customSaveButton.setPreferredSize(new Dimension(0, 35));
+            customSaveButton.setToolTipText("Copy To " + customAction.directory.toString());
+            customSaveButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    moveImage(getDestination(customAction.directory.toString(), FileMoveType.COPY_CUSTOM), FileMoveType.COPY_CUSTOM);
+                }
+            });
+            gbc.gridy = i + rowCount;
+            jPanelCustomActions.add(customSaveButton, gbc);
+        }        
+        jPanelCustomActions.revalidate();
+        jPanelCustomActions.repaint();
+        pack();
+    }
+    
+    private int alpha = 255;
+    private int alphaCounter = 0;
+    private int increment = -5;
+    private boolean showStatus = false;
+    private boolean hideStatus = false;
+    
+    Timer showStatusLabel = new Timer(10, new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+          if (showStatus) {
+              alpha = 0;
+              alphaCounter = 0;
+              increment = 5;
+              showStatus = false;
+          }
+        alphaCounter += increment;
+        if (alphaCounter > 255) {
+            alpha = 255;
+            if (alphaCounter > 400) {
+                increment = -5;
+                //alphaCounter = 255;
+            }
+        } else if (alphaCounter < 0) {
+            alpha = 0;
+            increment = 0;
+        } else {
+            alpha = alphaCounter;
+        }
+        //if (alpha >= 255) {
+        //  alpha = 255;
+        //  increment = -increment;
+        //}
+        //if (alpha <= 0) {
+        //  alpha = 0;
+        //  increment = -increment;
+        //}
+        jLabelStatus.setForeground(new Color(0, 102, 0, alpha));
+      }
+    });
+    
+    Timer hideStatusLabel = new Timer(80, new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        alpha += increment;
+        if (alpha >= 255) {
+          alpha = 255;
+          increment = -increment;
+        }
+        if (alpha <= 0) {
+          alpha = 0;
+          increment = -increment;
+        }
+        jLabelStatus.setForeground(new Color(0, 0, 0, alpha));
+      }
+    });
     
     Action RightAction = new AbstractAction() {
         @Override
@@ -1288,7 +1489,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         Path moveToPathAndFile = Paths.get(destination);
         if (jCheckBoxAutoCreateDirs.isSelected()
                 && moveType != null
-                && moveType == FileMoveType.MOVE) {
+                && (moveType == FileMoveType.MOVE
+                    || moveType == FileMoveType.COPY)) {
             long lastModified = sourceFile.toFile().lastModified();
             LocalDateTime fileDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(lastModified), ZoneId.systemDefault());
             String year = String.valueOf(fileDateTime.getYear());
@@ -1303,7 +1505,9 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                 month = month + "_" + ((String) jComboBoxDirName.getSelectedItem()).trim();
             }
             moveToPathAndFile = Paths.get(destination, year, month);
-        } else if (moveType != null && moveType == FileMoveType.MOVE) {
+        } else if (moveType != null
+                    && (moveType == FileMoveType.MOVE
+                        || moveType == FileMoveType.COPY)) {
             //check for a custom dir name
             if (jComboBoxDirName.getModel() != null
                     && jComboBoxDirName.getModel().getSize() > 0
@@ -1407,7 +1611,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
             boolean success = FileUtilities.copyFile(sourceFile, destination);
             if (!success) throw new Exception("Could not copy the file over");
             if ((moveType == FileMoveType.DELETE)
-                    || !jCheckBoxCopyOnly.isSelected()) {
+                    || moveType == FileMoveType.MOVE) {
                 Files.delete(sourceFile);
             }
             int originalIndex = fileIndex;
@@ -1423,6 +1627,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                     "Issue " + moveType.actionDescription.toLowerCase() + " File", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
+        jLabelStatus.setText(moveType.actionDescription + " Complete...");
+        showStatus = true;
     }
 
     private void undoLastAction() {

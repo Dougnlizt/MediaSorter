@@ -5,6 +5,23 @@
  */
 package imageSorter;
 
+import java.awt.GridBagConstraints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
 /**
  *
  * @author dougthompson
@@ -31,100 +48,34 @@ public class CustomActionsDialog extends javax.swing.JDialog {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jButtonBrowseCustomLocaion = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
+        jButtonAddCustomAction = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        jLabel1.setText("Enabled");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jPanel1.add(jLabel1, gridBagConstraints);
-
-        jLabel2.setText("Name");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jPanel1.add(jLabel2, gridBagConstraints);
-
-        jLabel3.setText("Directory");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jPanel1.add(jLabel3, gridBagConstraints);
-
-        jLabel4.setText("...");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jPanel1.add(jLabel4, gridBagConstraints);
-
-        jLabel5.setText("Remove");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jPanel1.add(jLabel5, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jPanel1.add(jCheckBox1, gridBagConstraints);
-
-        jButtonBrowseCustomLocaion.setText("...");
-        jButtonBrowseCustomLocaion.setPreferredSize(new java.awt.Dimension(40, 29));
-        jButtonBrowseCustomLocaion.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCancel.setText("Close");
+        jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonBrowseCustomLocaionActionPerformed(evt);
+                jButtonCancelActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jPanel1.add(jButtonBrowseCustomLocaion, gridBagConstraints);
-
-        jTextField1.setPreferredSize(new java.awt.Dimension(150, 28));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jPanel1.add(jTextField1, gridBagConstraints);
-
-        jTextField2.setPreferredSize(new java.awt.Dimension(400, 28));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jPanel1.add(jTextField2, gridBagConstraints);
-
-        jButton1.setText("X");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
-        jPanel1.add(jButton1, gridBagConstraints);
-
-        jButtonCancel.setText("Cancel");
 
         jButtonSave.setText("Save");
+        jButtonSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveActionPerformed(evt);
+            }
+        });
+
+        jButtonAddCustomAction.setText("Add Custom Location");
+        jButtonAddCustomAction.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddCustomActionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -135,7 +86,8 @@ public class CustomActionsDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButtonAddCustomAction)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonSave)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonCancel)))
@@ -146,18 +98,30 @@ public class CustomActionsDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancel)
-                    .addComponent(jButtonSave)))
+                    .addComponent(jButtonSave)
+                    .addComponent(jButtonAddCustomAction)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonBrowseCustomLocaionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowseCustomLocaionActionPerformed
-        //selectMoveTo();
-    }//GEN-LAST:event_jButtonBrowseCustomLocaionActionPerformed
+    private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
+        saveCustomActions(sourceFileName);
+    }//GEN-LAST:event_jButtonSaveActionPerformed
+
+    private void jButtonAddCustomActionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddCustomActionActionPerformed
+        CustomAction customAction = new CustomAction(true, "", Paths.get(""));
+        customActions.add(customAction);
+        selectDir(customAction);
+        saveCustomActions(sourceFileName);
+    }//GEN-LAST:event_jButtonAddCustomActionActionPerformed
+
+    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
+        this.setVisible(false);
+    }//GEN-LAST:event_jButtonCancelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -202,23 +166,250 @@ public class CustomActionsDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButtonBrowseCustomLocaion;
+    private javax.swing.JButton jButtonAddCustomAction;
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 
+    private final String homeDir = System.getProperty("user.home");
+    private List<CustomAction> customActions = new ArrayList<>();
+    private final String sourceFileName = "imageSorterCustomActions.txt";
+    
     private void initMyComponents() {
+        loadCustomActions(sourceFileName);
+        initCustomActionComponents();
+    }
+    
+    // <editor-fold defaultstate="collapsed" desc="Init Components">
+    private void initCustomActionComponents() {
         //Need to add components to the grid layout based on what has been saved...
+        GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+        
+        jPanel1.removeAll();
+        
+        if (!customActions.isEmpty()) {
+            JLabel enabledLabel = new JLabel("Enabled");
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+            jPanel1.add(enabledLabel, gridBagConstraints);
+
+            JLabel nameLabel = new JLabel("Button Name");
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+            jPanel1.add(nameLabel, gridBagConstraints);
+
+            JLabel dirLabel = new JLabel("Directory To Copy File To");
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 2;
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+            jPanel1.add(dirLabel, gridBagConstraints);
+
+            JLabel elipsesLabel = new JLabel("...");
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 3;
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+            jPanel1.add(elipsesLabel, gridBagConstraints);
+
+            JLabel removeLabel = new JLabel("Remove");
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 4;
+            gridBagConstraints.gridy = 0;
+            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+            jPanel1.add(removeLabel, gridBagConstraints);
+        }
+        
+        int offset = 1;
+        for (int i = 0; i < customActions.size(); i ++) {
+            CustomAction customAction = customActions.get(i);
+            
+            JCheckBox checkBoxItem = new JCheckBox();
+            checkBoxItem.setSelected(customAction.enabled);
+            checkBoxItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    customAction.enabled = checkBoxItem.isSelected();
+                }
+            });
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = i + offset;
+            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+            jPanel1.add(checkBoxItem, gridBagConstraints);
+            
+            JTextField nameItem = customAction.nameTextField;
+            if (nameItem == null) {
+                nameItem = new JTextField();
+                nameItem.setText(customAction.name);
+                nameItem.setPreferredSize(new java.awt.Dimension(150, 28));
+            }
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 1;
+            gridBagConstraints.gridy = i + offset;
+            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+            jPanel1.add(nameItem, gridBagConstraints);
+            customAction.nameTextField = nameItem;
+
+            JTextField directoryItem = new JTextField();
+            directoryItem.setText(customAction.directory.toString());
+            directoryItem.setPreferredSize(new java.awt.Dimension(400, 28));
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 2;
+            gridBagConstraints.gridy = i + offset;
+            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+            jPanel1.add(directoryItem, gridBagConstraints);
+            
+            JButton browseButton = new JButton();
+            browseButton.setText("...");
+            browseButton.setPreferredSize(new java.awt.Dimension(40, 29));
+            browseButton.addActionListener(new ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    //Here's the code for browsing based on the current directory value
+                        //or previous value if it exists...
+                    selectDir(customAction);
+                }
+            });
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 3;
+            gridBagConstraints.gridy = i + offset;
+            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+            jPanel1.add(browseButton, gridBagConstraints);
+            
+            JButton removeButton = new JButton();
+            removeButton.setText("X");
+            removeButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    //Here's the code for removing this one
+                    removeAction(customAction);
+                }
+            });
+            gridBagConstraints = new java.awt.GridBagConstraints();
+            gridBagConstraints.gridx = 4;
+            gridBagConstraints.gridy = i + offset;
+            gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+            jPanel1.add(removeButton, gridBagConstraints);
+        }
+
+        jPanel1.revalidate();
+        jPanel1.repaint();
+        pack();
+    }
+    // </editor-fold>
+    
+    private void selectDir(CustomAction customAction) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        String selectedDir = customAction.directory.toString();
+        if ((selectedDir == null || selectedDir.isEmpty())
+                && !customActions.isEmpty()) {
+            //Get the last one in the customActions list
+            selectedDir = customActions.get(customActions.size() - 1).directory.toString();
+        }
+        Path currPath = null;
+        if (selectedDir != null) {
+            currPath = Paths.get(selectedDir);
+        }
+        if (currPath != null) {
+            chooser.setCurrentDirectory(currPath.toFile());
+        }
+        int returnValue = chooser.showDialog(this, "Select Dir");
+        switch(returnValue) {
+            case JFileChooser.CANCEL_OPTION:
+                return;
+            case JFileChooser.ERROR_OPTION:
+                JOptionPane.showMessageDialog(this, "There was an error", "Error Selecting Directory", JOptionPane.OK_OPTION);
+                return;
+            case JFileChooser.APPROVE_OPTION:
+                break;
+        }
+        File dirItem = chooser.getSelectedFile();
+        Path newPath = dirItem.toPath();
+        
+        if (newPath != null) {
+            //Add it to the list and refresh the combo box
+            //comboList.add(0, newPath);
+            //populateComboBox(comboList, comboBox, 0);
+            customAction.directory = newPath;
+        }
+        initCustomActionComponents();
+    }
+    
+    private void removeAction(CustomAction customAction) {
+        customActions.remove(customAction);
+        saveCustomActions(sourceFileName);
+        initCustomActionComponents();
+    }
+    
+    public class CustomAction {
+        boolean enabled = true;
+        String name;
+        Path directory;
+        JTextField nameTextField;
+
+        public CustomAction(boolean enabled, String name, Path directory) {
+            this.enabled = enabled;
+            this.name = name;
+            this.directory = directory;
+        }
+
+        @Override
+        public String toString() {
+            if (name != null && !name.trim().isEmpty()) {
+                return name;
+            } else {
+                return "Not Named";
+            }
+        }
+        
         
     }
+    
+    private void saveCustomActions(String fileName) {
+        StringBuffer stringToWrite = new StringBuffer("");
+        for (CustomAction customAction : customActions) {
+            customAction.name = customAction.nameTextField.getText();
+            stringToWrite.append(customAction.enabled).append(",").append(customAction.name).append(",").append(customAction.directory.toString()).append("\n");
+        }        
+        Path fileDest = Paths.get(homeDir, fileName);
+        try {
+            FileUtilities.writeStringToFile(fileDest, stringToWrite, false);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Problem saving custom actions:  " + ex.getMessage(), 
+                    "Issue Saving Custom Actions", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }        
+    
+    private int loadCustomActions(String fileName) {
+        int selectedIndex = -10;
+        try {
+            ArrayList<String> directoriesList = FileUtilities.readLinesFromFile(Paths.get(homeDir, fileName));
+            customActions.clear();
+            for (String pref : directoriesList) {
+                String[] customAction = pref.split(",");
+                boolean required = true;
+                int nameIndex = 0;
+                if (customAction.length > 2) {
+                    required = Boolean.parseBoolean(customAction[0]);
+                    nameIndex = 1;
+                }
+                customActions.add(new CustomAction(required, customAction[nameIndex], Paths.get(customAction[nameIndex + 1])));
+            }
+        } catch (Exception ex2) {
+            ex2.printStackTrace();
+        }
+        return selectedIndex;
+    }
+
+    public List<CustomAction> getCustomActions() {
+        return customActions;
+    }
+    
+    
 }
