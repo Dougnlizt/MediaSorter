@@ -875,6 +875,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     //                         Save up to 20 previously selected Dir Name values, while allowing a type-in vlaue
     //                         When looking for images, make the extension check case insensitive
     //                         Add tooltips to provide additional descriptions
+    //                         Add the option to create customized additional locations to copy files to
     
     private void initMyComponents() {
         jPanelCustomActions.setLayout(new BoxLayout(jPanelCustomActions, BoxLayout.PAGE_AXIS));
@@ -1096,21 +1097,6 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         //  increment = -increment;
         //}
         jLabelStatus.setForeground(new Color(0, 102, 0, alpha));
-      }
-    });
-    
-    Timer hideStatusLabel = new Timer(80, new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        alpha += increment;
-        if (alpha >= 255) {
-          alpha = 255;
-          increment = -increment;
-        }
-        if (alpha <= 0) {
-          alpha = 0;
-          increment = -increment;
-        }
-        jLabelStatus.setForeground(new Color(0, 0, 0, alpha));
       }
     });
     

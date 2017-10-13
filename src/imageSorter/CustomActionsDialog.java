@@ -5,6 +5,7 @@
  */
 package imageSorter;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +22,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 
 /**
  *
@@ -45,12 +47,12 @@ public class CustomActionsDialog extends javax.swing.JDialog {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel1 = new javax.swing.JPanel();
         jButtonCancel = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
         jButtonAddCustomAction = new javax.swing.JButton();
+        jLabelSaveStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -77,6 +79,9 @@ public class CustomActionsDialog extends javax.swing.JDialog {
             }
         });
 
+        jLabelSaveStatus.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
+        jLabelSaveStatus.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -87,7 +92,9 @@ public class CustomActionsDialog extends javax.swing.JDialog {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButtonAddCustomAction)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
+                        .addComponent(jLabelSaveStatus)
+                        .addGap(18, 18, 18)
                         .addComponent(jButtonSave)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonCancel)))
@@ -99,10 +106,14 @@ public class CustomActionsDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonCancel)
-                    .addComponent(jButtonSave)
-                    .addComponent(jButtonAddCustomAction)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonCancel)
+                        .addComponent(jButtonSave)
+                        .addComponent(jLabelSaveStatus))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButtonAddCustomAction)
+                        .addContainerGap())))
         );
 
         pack();
@@ -169,6 +180,7 @@ public class CustomActionsDialog extends javax.swing.JDialog {
     private javax.swing.JButton jButtonAddCustomAction;
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonSave;
+    private javax.swing.JLabel jLabelSaveStatus;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 
@@ -179,6 +191,7 @@ public class CustomActionsDialog extends javax.swing.JDialog {
     private void initMyComponents() {
         loadCustomActions(sourceFileName);
         initCustomActionComponents();
+        showStatusLabel.start();
     }
     
     // <editor-fold defaultstate="collapsed" desc="Init Components">
@@ -210,7 +223,7 @@ public class CustomActionsDialog extends javax.swing.JDialog {
             gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
             jPanel1.add(dirLabel, gridBagConstraints);
 
-            JLabel elipsesLabel = new JLabel("...");
+            JLabel elipsesLabel = new JLabel("Browse");
             gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 3;
             gridBagConstraints.gridy = 0;
@@ -283,6 +296,7 @@ public class CustomActionsDialog extends javax.swing.JDialog {
             
             JButton removeButton = new JButton();
             removeButton.setText("X");
+            removeButton.setForeground(new Color(255, 0, 0));
             removeButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     //Here's the code for removing this one
@@ -384,6 +398,8 @@ public class CustomActionsDialog extends javax.swing.JDialog {
                     "Issue Saving Custom Actions", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
+        jLabelSaveStatus.setText("Changes Saved...");
+        showStatus = true;
     }        
     
     private int loadCustomActions(String fileName) {
@@ -411,5 +427,34 @@ public class CustomActionsDialog extends javax.swing.JDialog {
         return customActions;
     }
     
+    private int alpha = 255;
+    private int alphaCounter = 0;
+    private int increment = -5;
+    private boolean showStatus = false;
+
+    Timer showStatusLabel = new Timer(10, new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+          if (showStatus) {
+              alpha = 0;
+              alphaCounter = 0;
+              increment = 5;
+              showStatus = false;
+          }
+        alphaCounter += increment;
+        if (alphaCounter > 255) {
+            alpha = 255;
+            if (alphaCounter > 400) {
+                increment = -5;
+                //alphaCounter = 255;
+            }
+        } else if (alphaCounter < 0) {
+            alpha = 0;
+            increment = 0;
+        } else {
+            alpha = alphaCounter;
+        }
+        jLabelSaveStatus.setForeground(new Color(0, 102, 0, alpha));
+      }
+    });
     
 }
