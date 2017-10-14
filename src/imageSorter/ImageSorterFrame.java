@@ -605,11 +605,17 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBoxSourceActionPerformed
 
     private void jComboBoxMoveToDestinationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMoveToDestinationActionPerformed
-        if (!initializing) savePaths(moveToList, moveToFileName, jComboBoxMoveToDestination);
+        if (!initializing) {
+            savePaths(moveToList, moveToFileName, jComboBoxMoveToDestination);
+            updateDestinationLabel();
+        }
     }//GEN-LAST:event_jComboBoxMoveToDestinationActionPerformed
 
     private void jComboBoxDeleteToDestinationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDeleteToDestinationActionPerformed
-        if (!initializing) savePaths(deleteToList, deleteToFileName, jComboBoxDeleteToDestination);
+        if (!initializing) {
+            savePaths(deleteToList, deleteToFileName, jComboBoxDeleteToDestination);
+            updateDestinationLabel();
+        }
     }//GEN-LAST:event_jComboBoxDeleteToDestinationActionPerformed
 
     private void jCheckBoxAutoCreateDirsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxAutoCreateDirsActionPerformed
@@ -870,7 +876,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     //Version 0.3 Feb xx 2017: Change the splash screen...
     //Version 1.0 Feb 21 2017: Include mp4 and mov files.  Allow images and videos to be opened in the 
     //                         OS native tool for viewing/playing
-    //Version 1.1 June 1 2017: Change the 'Move' button to 'Copy' if the copy checkbox is selected
+    //Version 2.0 Oct 14 2017: Change the 'Move' button to 'Copy' if the copy checkbox is selected
     //                         When deleting, delete the source file even if the 'copy' checkbox is selected
     //                         Save up to 20 previously selected Dir Name values, while allowing a type-in vlaue
     //                         When looking for images, make the extension check case insensitive
@@ -909,7 +915,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         
         defaultFG_Color = jLabelDestination.getForeground();
         jCheckBoxAutoCreateDirs.setSelected(true);
-        setTitle("Image Sorter Version 1.1");
+        setTitle("Image Sorter Version 2.0");
 
         jComboBoxSource.setMaximumRowCount(MAX_SOURCE_ITEMS);
         int selectedIndex = getPaths(sourceFileName, selectSourceList);
