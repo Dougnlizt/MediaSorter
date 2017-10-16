@@ -882,6 +882,10 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     //                         When looking for images, make the extension check case insensitive
     //                         Add tooltips to provide additional descriptions
     //                         Add the option to create customized additional locations to copy files to
+    //Version 2.x xxx        : Auto fill in the name of the button when selecting a new directory
+    //                         Add tooltips for the buttons in the custom actions dialog
+    //                         The play video image isn't showing.  Neither is the splashscreen.
+    //                         Unable to overwrite (in deleted location)
     
     private void initMyComponents() {
         jPanelCustomActions.setLayout(new BoxLayout(jPanelCustomActions, BoxLayout.PAGE_AXIS));
