@@ -59,6 +59,7 @@ public class CustomActionsDialog extends javax.swing.JDialog {
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
         jButtonCancel.setText("Close");
+        jButtonCancel.setToolTipText("Close this window and update the form");
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelActionPerformed(evt);
@@ -66,6 +67,7 @@ public class CustomActionsDialog extends javax.swing.JDialog {
         });
 
         jButtonSave.setText("Save");
+        jButtonSave.setToolTipText("Save any changes you may have made");
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveActionPerformed(evt);
@@ -73,6 +75,7 @@ public class CustomActionsDialog extends javax.swing.JDialog {
         });
 
         jButtonAddCustomAction.setText("Add Custom Location");
+        jButtonAddCustomAction.setToolTipText("Add a new directory to copy files to");
         jButtonAddCustomAction.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAddCustomActionActionPerformed(evt);
@@ -350,6 +353,9 @@ public class CustomActionsDialog extends javax.swing.JDialog {
             //comboList.add(0, newPath);
             //populateComboBox(comboList, comboBox, 0);
             customAction.directory = newPath;
+            if (customAction.name == null || customAction.name.isEmpty()) {
+                customAction.name = newPath.getFileName().toString();
+            }
         }
         initCustomActionComponents();
     }

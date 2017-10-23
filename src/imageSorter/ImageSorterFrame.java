@@ -230,7 +230,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                                             .addComponent(jCheckBoxCopyOnly)
                                             .addGap(0, 0, Short.MAX_VALUE))
                                         .addGroup(jPanel2Layout.createSequentialGroup()
-                                            .addComponent(jComboBoxMoveToDestination, 0, 563, Short.MAX_VALUE)
+                                            .addComponent(jComboBoxMoveToDestination, 0, 609, Short.MAX_VALUE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(jButtonBrowseMoveTo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addContainerGap())
@@ -318,7 +318,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabelNext)
                             .addGap(18, 18, 18))
-                        .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
+                        .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
                     );
                     jPanel1Layout.setVerticalGroup(
                         jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -431,7 +431,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                                 .addGroup(jPanel4Layout.createSequentialGroup()
                                     .addComponent(jLabelStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jLabelXofY, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+                                    .addComponent(jLabelXofY, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
                                     .addGap(20, 20, 20)
                                     .addComponent(jButtonMove)
                                     .addGap(18, 18, 18)
@@ -574,7 +574,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                     getContentPane().setLayout(layout);
                     layout.setHorizontalGroup(
                         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jSplitPane1)
+                        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 806, Short.MAX_VALUE)
                     );
                     layout.setVerticalGroup(
                         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -844,7 +844,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private ImageSorterFrame thisObject = null;
     private String imageExtensions = "jpgjpeggifpng";
     private String videoExtensions = "mp4mov";
-    private static final String PLAY_VIDEO_IMAGE_LOCATION = "ImageSorterPlayVideo.jpg";
+    private static final String PLAY_VIDEO_IMAGE_LOCATION = "ImageSorterPlayVideo.jpg"; //"playVideo.jpg"; //ImageSorterPlayVideo.jpg";
     private final static int MAX_SOURCE_ITEMS = 10;
     private final static int MAX_DEST_ITEMS = 10;
     private final static int MAX_DELETE_ITEMS = 10;
@@ -882,9 +882,10 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     //                         When looking for images, make the extension check case insensitive
     //                         Add tooltips to provide additional descriptions
     //                         Add the option to create customized additional locations to copy files to
-    //Version 2.x xxx        : Auto fill in the name of the button when selecting a new directory
-    //                         Add tooltips for the buttons in the custom actions dialog
-    //                         The play video image isn't showing.  Neither is the splashscreen.
+    //Version 2.1 xxx        : xAuto fill in the name of the button when selecting a new directory
+    //                         xAdd tooltips for the buttons in the custom actions dialog
+    //                         xThe play video image isn't showing.
+    //                         Neither is the splashscreen.
     //                         Unable to overwrite (in deleted location)
     
     private void initMyComponents() {
@@ -919,7 +920,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         
         defaultFG_Color = jLabelDestination.getForeground();
         jCheckBoxAutoCreateDirs.setSelected(true);
-        setTitle("Image Sorter Version 2.0");
+        setTitle("Image Sorter Version 2.1");
 
         jComboBoxSource.setMaximumRowCount(MAX_SOURCE_ITEMS);
         int selectedIndex = getPaths(sourceFileName, selectSourceList);
@@ -1255,7 +1256,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
             imageLabel.setImage(imageIcon.getImage());
             imageLabel.setToolTipText("Open image in image viewer");
         } else {
-            ImageIcon imageIcon = new ImageIcon(PLAY_VIDEO_IMAGE_LOCATION);
+            ImageIcon imageIcon = new ImageIcon(getClass().getResource("/images/" + PLAY_VIDEO_IMAGE_LOCATION));
             imageLabel.setImage(imageIcon.getImage());
             imageLabel.setToolTipText("Open/play video in player");
         }
