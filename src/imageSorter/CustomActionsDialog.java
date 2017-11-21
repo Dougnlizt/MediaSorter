@@ -48,6 +48,8 @@ public class CustomActionsDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jButtonCancel = new javax.swing.JButton();
         jButtonSave = new javax.swing.JButton();
@@ -85,17 +87,17 @@ public class CustomActionsDialog extends javax.swing.JDialog {
         jLabelSaveStatus.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         jLabelSaveStatus.setText("jLabel1");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jButtonAddCustomAction)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 150, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 372, Short.MAX_VALUE)
                         .addComponent(jLabelSaveStatus)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonSave)
@@ -103,20 +105,38 @@ public class CustomActionsDialog extends javax.swing.JDialog {
                         .addComponent(jButtonCancel)))
                 .addContainerGap())
         );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonCancel)
+                        .addComponent(jButtonSave)
+                        .addComponent(jLabelSaveStatus))
+                    .addComponent(jButtonAddCustomAction, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+
+        jScrollPane1.setViewportView(jPanel2);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE)
+                .addContainerGap())
+        );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButtonCancel)
-                        .addComponent(jButtonSave)
-                        .addComponent(jLabelSaveStatus))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButtonAddCustomAction)
-                        .addContainerGap())))
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
 
         pack();
@@ -185,6 +205,8 @@ public class CustomActionsDialog extends javax.swing.JDialog {
     private javax.swing.JButton jButtonSave;
     private javax.swing.JLabel jLabelSaveStatus;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
     private final String homeDir = System.getProperty("user.home");
@@ -203,6 +225,8 @@ public class CustomActionsDialog extends javax.swing.JDialog {
         GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
         
         jPanel1.removeAll();
+        
+        int maxHeight = 300;
         
         if (!customActions.isEmpty()) {
             JLabel enabledLabel = new JLabel("Enabled");
@@ -279,6 +303,8 @@ public class CustomActionsDialog extends javax.swing.JDialog {
             gridBagConstraints.gridx = 2;
             gridBagConstraints.gridy = i + offset;
             gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 0);
+            gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.weightx = 1.0; 
             jPanel1.add(directoryItem, gridBagConstraints);
             
             JButton browseButton = new JButton();
@@ -315,6 +341,11 @@ public class CustomActionsDialog extends javax.swing.JDialog {
 
         jPanel1.revalidate();
         jPanel1.repaint();
+        jPanel2.revalidate();
+        jPanel2.repaint();
+        jScrollPane1.revalidate();
+        jScrollPane1.repaint();
+        
         pack();
     }
     // </editor-fold>
@@ -324,9 +355,9 @@ public class CustomActionsDialog extends javax.swing.JDialog {
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         String selectedDir = customAction.directory.toString();
         if ((selectedDir == null || selectedDir.isEmpty())
-                && !customActions.isEmpty()) {
-            //Get the last one in the customActions list
-            selectedDir = customActions.get(customActions.size() - 1).directory.toString();
+                && customActions.size() > 1) {
+            //Get the last one in the customActions list before this new one just added
+            selectedDir = customActions.get(customActions.size() - 2).directory.toString();
         }
         Path currPath = null;
         if (selectedDir != null) {
@@ -425,10 +456,10 @@ public class CustomActionsDialog extends javax.swing.JDialog {
             }
         } catch (Exception ex2) {
             ex2.printStackTrace();
-        }
+        }        
         return selectedIndex;
     }
-
+    
     public List<CustomAction> getCustomActions() {
         return customActions;
     }

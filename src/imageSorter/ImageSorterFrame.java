@@ -12,7 +12,6 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,11 +46,8 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import static javax.swing.KeyStroke.getKeyStroke;
-import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -114,6 +110,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         jButtonBrowseDir = new javax.swing.JButton();
         jComboBoxDirName = new javax.swing.JComboBox<>();
         jLabelStatus = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
         jPanelCustomActions = new javax.swing.JPanel();
         jButtonCustomizeActions = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -318,13 +315,13 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabelNext)
                             .addGap(18, 18, 18))
-                        .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
+                        .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
                     );
                     jPanel1Layout.setVerticalGroup(
                         jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addContainerGap()
-                            .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                            .addComponent(imageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jSliderBrowsePictures, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -505,6 +502,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                     gridBagConstraints.insets = new java.awt.Insets(6, 6, 312, 6);
                     jPanelCustomActions.add(jButtonCustomizeActions, gridBagConstraints);
 
+                    jScrollPane1.setViewportView(jPanelCustomActions);
+
                     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
                     jPanel3.setLayout(jPanel3Layout);
                     jPanel3Layout.setHorizontalGroup(
@@ -516,7 +515,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                                 .addGroup(jPanel3Layout.createSequentialGroup()
                                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jPanelCustomActions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addContainerGap())
                     );
                     jPanel3Layout.setVerticalGroup(
@@ -525,7 +524,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                             .addContainerGap()
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jPanelCustomActions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane1))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addContainerGap())
@@ -574,7 +573,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                     getContentPane().setLayout(layout);
                     layout.setHorizontalGroup(
                         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 806, Short.MAX_VALUE)
+                        .addComponent(jSplitPane1)
                     );
                     layout.setVerticalGroup(
                         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -816,6 +815,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelCustomActions;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSlider jSliderBrowsePictures;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextField jTextFieldFilename;
@@ -882,11 +882,14 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     //                         When looking for images, make the extension check case insensitive
     //                         Add tooltips to provide additional descriptions
     //                         Add the option to create customized additional locations to copy files to
-    //Version 2.1 xxx        : xAuto fill in the name of the button when selecting a new directory
+    //Version 2.1 Nov 04 2017: xAuto fill in the name of the button when selecting a new directory
     //                         xAdd tooltips for the buttons in the custom actions dialog
     //                         xThe play video image isn't showing.
-    //                         Neither is the splashscreen.
+    //                         xNeither is the splashscreen.
     //                         Unable to overwrite (in deleted location)
+    //                         xAllow the custom locations to be scrollable
+    //                         xWhen selecting a new custom location, default to the last selected location
+    //                         xAllow scrollbars for the list of custom buttons
     
     private void initMyComponents() {
         jPanelCustomActions.setLayout(new BoxLayout(jPanelCustomActions, BoxLayout.PAGE_AXIS));
@@ -1069,6 +1072,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         }        
         jPanelCustomActions.revalidate();
         jPanelCustomActions.repaint();
+        jScrollPane1.revalidate();
+        jScrollPane1.repaint();
         pack();
     }
     
@@ -1256,9 +1261,18 @@ public class ImageSorterFrame extends javax.swing.JFrame {
             imageLabel.setImage(imageIcon.getImage());
             imageLabel.setToolTipText("Open image in image viewer");
         } else {
-            ImageIcon imageIcon = new ImageIcon(getClass().getResource("/images/" + PLAY_VIDEO_IMAGE_LOCATION));
-            imageLabel.setImage(imageIcon.getImage());
-            imageLabel.setToolTipText("Open/play video in player");
+            try {
+                //DT:  The following uses jcodec libaries (2) that grabs a frame from the video.  It's pretty slow, though.
+                    //Picture picture = FrameGrab.getFrameFromFile(imageFile.toFile(), 1);
+                    //BufferedImage bufferedImage = AWTUtil.toBufferedImage(picture);
+                    //ImageIcon imageIcon = new ImageIcon(bufferedImage);
+                //DT:  Long term, FFMpeg may be the best tool to use -- command line option
+                ImageIcon imageIcon = new ImageIcon(getClass().getResource("/images/" + PLAY_VIDEO_IMAGE_LOCATION));
+                imageLabel.setImage(imageIcon.getImage());
+                imageLabel.setToolTipText("Open/play video in player");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Problem with video\n\n\t" + imageFile.getFileName().toString(), "Problem Showing Video Image", JOptionPane.ERROR_MESSAGE);
+            }
         }
         jTextFieldFilename.setText(FileUtilities.getPrefix(imageFile.getFileName().toFile()));
         jLabelFilenameExtension.setText("." + FileUtilities.getExtension(imageFile.getFileName().toFile()));
