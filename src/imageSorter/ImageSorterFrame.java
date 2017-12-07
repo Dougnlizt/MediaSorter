@@ -1031,6 +1031,14 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         
         showStatusLabel.start();
     }
+
+    public String getHomeDir() {
+        return homeDir;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
     
     private void initCustomActions() {
         //Get all the custom action objects

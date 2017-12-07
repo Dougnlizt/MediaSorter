@@ -35,6 +35,7 @@ public class CustomActionsDialog extends javax.swing.JDialog {
      */
     public CustomActionsDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        parentFrame = (ImageSorterFrame) parent;
         initComponents();
         initMyComponents();
     }
@@ -209,11 +210,15 @@ public class CustomActionsDialog extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    private final String homeDir = System.getProperty("user.home");
+    ImageSorterFrame parentFrame;
+    private String homeDir; // = parentFrame.getHomeDir(); // System.getProperty("user.home");
+    private String appName; // = parentFrame.getAppName(); //"ImageSorter";
     private List<CustomAction> customActions = new ArrayList<>();
     private final String sourceFileName = "imageSorterCustomActions.txt";
     
     private void initMyComponents() {
+        homeDir = parentFrame.getHomeDir(); // System.getProperty("user.home");
+        appName = parentFrame.getAppName(); //"ImageSorter";
         loadCustomActions(sourceFileName);
         initCustomActionComponents();
         showStatusLabel.start();
@@ -427,7 +432,7 @@ public class CustomActionsDialog extends javax.swing.JDialog {
             customAction.name = customAction.nameTextField.getText();
             stringToWrite.append(customAction.enabled).append(",").append(customAction.name).append(",").append(customAction.directory.toString()).append("\n");
         }        
-        Path fileDest = Paths.get(homeDir, fileName);
+        Path fileDest = Paths.get(homeDir, appName, fileName);
         try {
             FileUtilities.writeStringToFile(fileDest, stringToWrite, false);
         } catch (IOException ex) {
@@ -442,7 +447,7 @@ public class CustomActionsDialog extends javax.swing.JDialog {
     private int loadCustomActions(String fileName) {
         int selectedIndex = -10;
         try {
-            ArrayList<String> directoriesList = FileUtilities.readLinesFromFile(Paths.get(homeDir, fileName));
+            ArrayList<String> directoriesList = FileUtilities.readLinesFromFile(Paths.get(homeDir, appName, fileName));
             customActions.clear();
             for (String pref : directoriesList) {
                 String[] customAction = pref.split(",");
