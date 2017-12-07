@@ -822,6 +822,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private final String homeDir = System.getProperty("user.home");
+    private final String appName = "ImageSorter";
     private List<Path> selectSourceList = new ArrayList<>(); 
     private final String sourceFileName = "imageSorterSourcePaths.txt";
     private List<Path> moveToList = new ArrayList<>(); 
@@ -1444,7 +1445,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private int getPaths(String fileName, List<Path> pathsList) {
         int selectedIndex = -10;
         try {
-            ArrayList<String> directoriesList = FileUtilities.readLinesFromFile(Paths.get(homeDir, fileName));
+            ArrayList<String> directoriesList = FileUtilities.readLinesFromFile(Paths.get(homeDir, appName, fileName));
             pathsList.clear();
             List<String> prefsList = new ArrayList<>();
             for (String pref : directoriesList) {
@@ -1546,7 +1547,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         for (Path source : pathList) {
             stringToWrite.append(source.toString()).append("\n");
         }        
-        Path fileDest = Paths.get(homeDir, fileName);
+        Path fileDest = Paths.get(homeDir, appName, fileName);
         try {
             FileUtilities.writeStringToFile(fileDest, stringToWrite, false);
         } catch (IOException ex) {
@@ -1558,7 +1559,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     
     private void getSettings() {
         try {
-            ArrayList<String> settingsList = FileUtilities.readLinesFromFile(Paths.get(homeDir, toolSettingsFileName));
+            ArrayList<String> settingsList = FileUtilities.readLinesFromFile(Paths.get(homeDir, appName, toolSettingsFileName));
             String temp;
             for (String pref : settingsList) {
                 String[] setting = pref.split(",");
@@ -1588,7 +1589,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         stringToWrite.append(CREATE_DATE_DIR).append(",").append(jCheckBoxAutoCreateDirs.isSelected()).append("\n");
         //stringToWrite.append(SUB_DIR_TEXT).append(",").append(jTextFieldDirName.getText()).append("\n");
         stringToWrite.append(HIDE_TOP_PART).append(",").append(jSplitPane1.getDividerLocation()).append("\n");
-        Path fileDest = Paths.get(homeDir, toolSettingsFileName);
+        Path fileDest = Paths.get(homeDir, appName, toolSettingsFileName);
         try {
             FileUtilities.writeStringToFile(fileDest, stringToWrite, false);
         } catch (IOException ex) {
