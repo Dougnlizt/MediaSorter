@@ -598,7 +598,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private void jComboBoxSourceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxSourceActionPerformed
         if (!initializing) {
             savePaths(selectSourceList, sourceFileName, jComboBoxSource);
-            getSourceFiles();
+            getSourceFiles(false);
         }
 
     }//GEN-LAST:event_jComboBoxSourceActionPerformed
@@ -623,15 +623,19 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBoxAutoCreateDirsActionPerformed
 
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
+        //this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         moveImage(getDestination((String) jComboBoxDeleteToDestination.getSelectedItem(), FileMoveType.DELETE), FileMoveType.DELETE);
+        //this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
     private void jButtonMoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMoveActionPerformed
+        //this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         if (jCheckBoxCopyOnly.isSelected()) {
             moveImage(getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), FileMoveType.COPY), FileMoveType.COPY);
         } else {
             moveImage(getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), FileMoveType.MOVE), FileMoveType.MOVE);
         }
+        //this.setCursor(Cursor.getDefaultCursor());
     }//GEN-LAST:event_jButtonMoveActionPerformed
 
     private void jLabelPreviousMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelPreviousMouseClicked
@@ -687,7 +691,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonBrowseDirActionPerformed
 
     private void jComboBoxDirNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDirNameActionPerformed
-        if (!initializing) {
+        if (!initializing && !processingComboBox) {
             updateDestinationLabel();
             savePaths(dirNamesList, dirNamesFileName, jComboBoxDirName);
         }
@@ -705,12 +709,11 @@ public class ImageSorterFrame extends javax.swing.JFrame {
 
     private void jComboBoxDirNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxDirNameItemStateChanged
         String dirName = (String) jComboBoxDirName.getSelectedItem();
-        if (!initializing && dirName != null) {
-            updateDestinationLabel();
-            savePaths(dirNamesList, dirNamesFileName, jComboBoxDirName);
+        if (!initializing && !processingComboBox && dirName != null) {
             //Get current selection, could have been typed in so need to update the dir name
                 //list
             updateDirNameList(Paths.get(dirName));
+            updateDestinationLabel();
         }
     }//GEN-LAST:event_jComboBoxDirNameItemStateChanged
 
@@ -836,6 +839,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private final static String SUB_DIR_TEXT = "Sub directory text to use with date directory";
     private final static String HIDE_TOP_PART = "Collapse the top componnet";
     private static boolean initializing = false;
+    private static boolean processingComboBox = false;
     private ArrayList<Path> filesList;
     private int fileIndex;
     private Color defaultFG_Color;
@@ -851,7 +855,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private final static int MAX_DELETE_ITEMS = 10;
     private final static int MAX_DIR_NAME_ITEMS = 20;
     private CustomActionsDialog customActionsDialog = null;
-    
+    private LocalDateTime sourceDirectoryTimeStamp = null;
+        
     private enum FileMoveType {
         MOVE("Move", "Moving"),
         COPY("Copy", "Copying"),
@@ -883,14 +888,16 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     //                         When looking for images, make the extension check case insensitive
     //                         Add tooltips to provide additional descriptions
     //                         Add the option to create customized additional locations to copy files to
-    //Version 2.1 Nov 04 2017: xAuto fill in the name of the button when selecting a new directory
-    //                         xAdd tooltips for the buttons in the custom actions dialog
-    //                         xThe play video image isn't showing.
-    //                         xNeither is the splashscreen.
+    //Version 2.1 Dec 30 2017: When adding custom actions, auto fill in the name of the button when selecting a new directory
+    //                         Add tooltips for the buttons in the custom actions dialog
+    //                         The play video image isn't showing.
+    //                         Neither is the splashscreen.
     //                         Unable to overwrite (in deleted location)
-    //                         xAllow the custom locations to be scrollable
-    //                         xWhen selecting a new custom location, default to the last selected location
-    //                         xAllow scrollbars for the list of custom buttons
+    //                         Allow the custom locations to be scrollable
+    //                         When selecting a new custom location, default to the last selected location
+    //                         Allow scrollbars for the list of custom buttons
+    //                         Show the wait cursor when performing an action
+    //                         Correct issues with the custom dir name
     
     private void initMyComponents() {
         jPanelCustomActions.setLayout(new BoxLayout(jPanelCustomActions, BoxLayout.PAGE_AXIS));
@@ -927,24 +934,24 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         setTitle("Image Sorter Version 2.1");
 
         jComboBoxSource.setMaximumRowCount(MAX_SOURCE_ITEMS);
-        int selectedIndex = getPaths(sourceFileName, selectSourceList);
+        int selectedIndex = getPaths(sourceFileName, selectSourceList, MAX_SOURCE_ITEMS);
         populateComboBox(selectSourceList, jComboBoxSource, selectedIndex);
 
         jComboBoxMoveToDestination.setMaximumRowCount(MAX_DEST_ITEMS);
-        selectedIndex = getPaths(moveToFileName, moveToList);
+        selectedIndex = getPaths(moveToFileName, moveToList, MAX_DEST_ITEMS);
         populateComboBox(moveToList, jComboBoxMoveToDestination, selectedIndex);
 
         jComboBoxDeleteToDestination.setMaximumRowCount(MAX_DELETE_ITEMS);
-        selectedIndex = getPaths(deleteToFileName, deleteToList);
+        selectedIndex = getPaths(deleteToFileName, deleteToList, MAX_DELETE_ITEMS);
         populateComboBox(deleteToList, jComboBoxDeleteToDestination, selectedIndex);
        
         jComboBoxDirName.setMaximumRowCount(MAX_DIR_NAME_ITEMS);
-        selectedIndex = getPaths(dirNamesFileName, dirNamesList);
+        selectedIndex = getPaths(dirNamesFileName, dirNamesList, MAX_DIR_NAME_ITEMS);
         populateComboBox(dirNamesList, jComboBoxDirName, selectedIndex);
         
         getSettings();
         
-        getSourceFiles();
+        getSourceFiles(false);
         
         ArrayList<Integer> rightActionList = new ArrayList<>();
         rightActionList.add(KeyEvent.VK_PERIOD);
@@ -1212,29 +1219,50 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private void selectSource() {
         selectDir(jComboBoxSource, selectSourceList);
         savePaths(selectSourceList, sourceFileName, null);
-        getSourceFiles();
+        getSourceFiles(false);
     }
     
-    private void getSourceFiles() {
+    private FilenameFilter filter = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+            String ext = FileUtilities.getExtension(new File(name));
+            if (ext == null) return false;
+            return (imageExtensions + videoExtensions).contains(ext);
+        }
+    };
+
+    /**
+     * Refreshes the list of files, but only if there have been changes to the source directory
+     */
+    private void getSourceFiles(boolean forceReload) {
         if (jComboBoxSource.getSelectedItem() == null) return;
         //Now get the files...
-        FilenameFilter filter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                String ext = FileUtilities.getExtension(new File(name));
-                if (ext == null) return false;
-                return (imageExtensions + videoExtensions).contains(ext);
+        if (forceReload || isSourceDirectoryUpdated()) {
+            filesList = FileUtilities.getDirFiles(Paths.get((String) jComboBoxSource.getSelectedItem()), false, filter);
+            if (filesList.size() > 0) {
+                fileIndex = 0;
+                setImage();
+                resetSlider(1);
+            } else {
+                setNoImage();
             }
-        };
-                
-        filesList = FileUtilities.getDirFiles(Paths.get((String) jComboBoxSource.getSelectedItem()), false, filter);
-        if (filesList.size() > 0) {
-            fileIndex = 0;
-            setImage();
-            resetSlider(1);
-        } else {
-            setNoImage();
+        }        
+    }
+    
+    public boolean isSourceDirectoryUpdated() {
+        if (jComboBoxSource.getSelectedItem() == null) return false;
+        boolean sourceUpdated = false;
+        File sourceDir = Paths.get((String) jComboBoxSource.getSelectedItem()).toFile();
+        if (sourceDir.isDirectory()) {
+            LocalDateTime sourceDirTimeStamp = LocalDateTime.ofInstant(Instant.ofEpochMilli(sourceDir.lastModified()), ZoneId.systemDefault());
+            if (sourceDirectoryTimeStamp == null) {
+                sourceUpdated = true;
+            } else {
+                sourceUpdated = sourceDirTimeStamp.isAfter(sourceDirectoryTimeStamp);
+            }
+            sourceDirectoryTimeStamp = sourceDirTimeStamp;
         }
+        return sourceUpdated;
     }
     
     private void resetSlider(int value) {
@@ -1335,15 +1363,15 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                             jComboBoxSource.remove(jComboBoxSource.getSelectedIndex());
                         }            
                         savePaths(selectSourceList, sourceFileName, jComboBoxSource);
-                        int selectedIndex = getPaths(sourceFileName, selectSourceList);
+                        int selectedIndex = getPaths(sourceFileName, selectSourceList, MAX_SOURCE_ITEMS);
                         populateComboBox(selectSourceList, jComboBoxSource, selectedIndex);
-                        getSourceFiles();
+                        getSourceFiles(false);
                     } else {
                         JOptionPane.showMessageDialog(this, "Unable to delete the directory.  Not sure why, though.", "Directory Could Not Be Deleted", JOptionPane.WARNING_MESSAGE);
                     }
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "The directory\n\n\t" + dirToDelete + "\n\nis not empty, but there are no images.", "No Images Found", JOptionPane.WARNING_MESSAGE);
+                //JOptionPane.showMessageDialog(this, "The directory\n\n\t" + dirToDelete + "\n\nis not empty, but there are no images.", "No Images Found", JOptionPane.WARNING_MESSAGE);
             }
         }
     }
@@ -1359,8 +1387,34 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     }
     
     private void selectDirName() {
-        selectDirName(jComboBoxDirName, dirNamesList);
-        savePaths(dirNamesList, dirNamesFileName, jComboBoxDirName);
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        Path currPath = getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), FileMoveType.MOVE);
+        if (currPath != null) {
+            chooser.setCurrentDirectory(currPath.getParent().getParent().toFile());
+        }
+        int returnValue = chooser.showDialog(this, "Select Dir");
+        switch(returnValue) {
+            case JFileChooser.CANCEL_OPTION:
+                return;
+            case JFileChooser.ERROR_OPTION:
+                JOptionPane.showMessageDialog(this, "There was an error", "Error Selecting Directory", JOptionPane.OK_OPTION);
+                return;
+            case JFileChooser.APPROVE_OPTION:
+                break;
+        }
+        File dirItem = chooser.getSelectedFile();
+        Path newPath = dirItem.toPath();
+        
+        if (newPath != null) {
+            Path dirName = newPath.getFileName();
+            //If it starts with a 2 digit number, remove first 3 chars
+            if (dirName.toString().matches("^[0-9]{2}.*")) {
+                dirName = Paths.get(dirName.toString().substring(3));
+            }
+            updateDirNameList(dirName);
+            updateDestinationLabel();
+        }
     }
     
     private void selectFileNameField() {
@@ -1399,64 +1453,36 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         }
     }
     
-    private void selectDirName(JComboBox<String> comboBox, List<Path> comboList) {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        //String selectedDirName = (String) comboBox.getSelectedItem();
-        Path currPath = getDestination((String) jComboBoxMoveToDestination.getSelectedItem(), FileMoveType.MOVE);
-        //if (selectedDirName != null) {
-        //    currPath = Paths.get(selectedDirName);
-        //}
-        if (currPath != null) {
-            chooser.setCurrentDirectory(currPath.getParent().getParent().toFile());
-        }
-        int returnValue = chooser.showDialog(this, "Select Dir");
-        switch(returnValue) {
-            case JFileChooser.CANCEL_OPTION:
-                return;
-            case JFileChooser.ERROR_OPTION:
-                JOptionPane.showMessageDialog(this, "There was an error", "Error Selecting Directory", JOptionPane.OK_OPTION);
-                return;
-            case JFileChooser.APPROVE_OPTION:
-                break;
-        }
-        File dirItem = chooser.getSelectedFile();
-        Path newPath = dirItem.toPath();
-        
-        if (newPath != null) {
-            Path dirName = newPath.getFileName();
-            //If it starts with a 2 digit number, remove first 3 chars
-            if (dirName.toString().matches("^[0-9]{2}.*")) {
-                dirName = Paths.get(dirName.toString().substring(3));
-            }
-            updateDirNameList(dirName);
-        }
-    }
-
     private void updateDirNameList(Path dirName) {
         //Add it to the list and refresh the combo box if it doesn't exist
         boolean alreadyExists = false;
-        for (Path path : dirNamesList) {
-            if (path.toString().equals(dirName.toString())) {
+        for (int i = 0; i < dirNamesList.size(); i++) {
+            if (dirNamesList.get(i).toString().equals(dirName.toString())) {
+                processingComboBox = true;
+                jComboBoxDirName.setSelectedIndex(i);
+                processingComboBox = false;
                 alreadyExists = true;
                 break;
             }
         }
         if (!alreadyExists) {
             dirNamesList.add(0, dirName);
-            savePaths(dirNamesList, dirNamesFileName, jComboBoxDirName);
+            processingComboBox = true;
+            jComboBoxDirName.setSelectedIndex(0);
+            processingComboBox = false;
             populateComboBox(dirNamesList, jComboBoxDirName, 0);
         }
-        
+        savePaths(dirNamesList, dirNamesFileName, jComboBoxDirName);        
     }
     
-    private int getPaths(String fileName, List<Path> pathsList) {
+    private int getPaths(String fileName, List<Path> pathsList, int maxNumItems) {
         int selectedIndex = -10;
         try {
             ArrayList<String> directoriesList = FileUtilities.readLinesFromFile(Paths.get(homeDir, appName, fileName));
             pathsList.clear();
             List<String> prefsList = new ArrayList<>();
-            for (String pref : directoriesList) {
+            for (int i = 0; i < Math.min(maxNumItems, directoriesList.size()); i ++) {
+                String pref = directoriesList.get(i);
                 if (prefsList.contains(pref)) continue;
                 if (selectedIndex == -10) {
                     try {
@@ -1475,7 +1501,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         return selectedIndex;
     }
     
-    private void populateComboBox(List<Path> pathList, JComboBox<String> comboBox, int selectedIndex) {        
+    private void populateComboBox(List<Path> pathList, JComboBox<String> comboBox, int selectedIndex) {
+        processingComboBox = true;        
         comboBox.removeAllItems();
         if (pathList.size() > (comboBox.getMaximumRowCount() + 1)) {
             pathList = pathList.subList(0, comboBox.getMaximumRowCount());
@@ -1486,6 +1513,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         if (selectedIndex > -1 && selectedIndex < comboBox.getModel().getSize()) {
             comboBox.setSelectedIndex(selectedIndex);
         }
+        processingComboBox = false;
     }
     
     private void updateDestinationLabel() {
@@ -1505,6 +1533,13 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private Path getDestination(String destination, FileMoveType moveType) {
         if ((fileIndex + 1 > filesList.size())
                 || destination == null) return null;
+        if (fileIndex < 0) {
+            if (filesList.size() > 0) {
+                fileIndex = 0;
+            } else {
+                return null;
+            }
+        }
         Path sourceFile = filesList.get(fileIndex);
         Path moveToPathAndFile = Paths.get(destination);
         if (jCheckBoxAutoCreateDirs.isSelected()
@@ -1611,36 +1646,99 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     
     private void moveImage(Path destination, FileMoveType moveType) {
         if (destination == null) return;
+        boolean sourceDirUpdatedBeforeModification = isSourceDirectoryUpdated();
+        if (sourceDirUpdatedBeforeModification) {
+            JOptionPane.showMessageDialog(this, "The source directory has been modified.  The action will be cancelled and"
+                    + " the list refreshed.", 
+                    "Source Directory Externally Modified", JOptionPane.WARNING_MESSAGE);
+            int currentFileIndex = fileIndex;
+            getSourceFiles(true);
+            //Try to set the current image to the previous file index
+            fileIndex = currentFileIndex;
+            setImage();
+            this.setCursor(Cursor.getDefaultCursor());
+            return;
+        }
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         //Get the file source
         Path sourceFile = filesList.get(fileIndex);
+        int numFilesBefore = filesList.size();
         try {
-            if (destination.toFile().exists()) {
-                Image bi = ImageIO.read(destination.toFile());
-                ImageIcon icon = new ImageIcon(bi.getScaledInstance(200, 200, Image.SCALE_SMOOTH));
-                
-                //Check to see if they want ot overwrite it anyway...
-                int response = JOptionPane.showConfirmDialog(this, "A file with the same name already exists."
-                        + NEW_LINE + "Are you sure"
-                        + " you want to overwrite the destination file??"
-                        + NEW_LINE + "Overwriting cannot be undone...",
-                        "File Already Exists", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, icon);
-                if (response != JOptionPane.YES_OPTION) {
-                    return;
+            if (moveType != FileMoveType.DELETE
+                    && destination.toFile().exists()) {
+                if (!FileUtilities.isDestFileSame(sourceFile.toFile(), destination.toFile())) {
+                    Image bi = ImageIO.read(destination.toFile());
+                    ImageIcon icon = new ImageIcon(bi.getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+
+                    //Check to see if they want ot overwrite it anyway...
+                    int response = JOptionPane.showConfirmDialog(this, "A file with the same name already exists."
+                            + NEW_LINE + "Are you sure"
+                            + " you want to overwrite the destination file??"
+                            + NEW_LINE + "Overwriting cannot be undone...",
+                            "File Already Exists", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, icon);
+                    if (response != JOptionPane.YES_OPTION) {
+                        this.setCursor(Cursor.getDefaultCursor());
+                        return;
+                    }
                 }
             }
-            boolean success = FileUtilities.copyFile(sourceFile, destination);
+            boolean success = FileUtilities.isDestFileSame(sourceFile.toFile(), destination.toFile());
+            if (!success) {
+                success = FileUtilities.copyFile(sourceFile, destination);
+            }
             if (!success) throw new Exception("Could not copy the file over");
+            boolean fileDeleted = false;
             if ((moveType == FileMoveType.DELETE)
                     || moveType == FileMoveType.MOVE) {
-                Files.delete(sourceFile);
+                //Verify the destination file is there before deleting
+                if (destination.toFile().exists()) {
+                    fileDeleted = Files.deleteIfExists(sourceFile);
+                    if (!fileDeleted) {
+                        throw new Exception("The file copy succeeded, but the source couldn't be deleted.");
+                    }
+                    //Reset the time stamp since a file was deleted from the directory... but only if the source dir wasn't
+                        //already modified
+                    if (!sourceDirUpdatedBeforeModification) {
+                        sourceDirectoryTimeStamp = null;
+                        isSourceDirectoryUpdated();
+                    }
+                } else {
+                    throw new Exception("The media file didn't make it to it's destination... action cancelled, please try again.");
+                }
             }
-            int originalIndex = fileIndex;
-            getSourceFiles();
-            fileIndex = originalIndex;
-            if (originalIndex > filesList.size() - 1) {
+            if (fileDeleted) {
+                filesList.remove(fileIndex);
+            }
+            int numFilesAfter = filesList.size();
+            if ((moveType == FileMoveType.DELETE)
+                    || moveType == FileMoveType.MOVE) {
+                //The difference between the before and after should be only 1
+                if (numFilesBefore - numFilesAfter != 1) {
+                    throw new Exception("The number of files left after " + moveType.actionDescription.toLowerCase() 
+                            + " should have been " + (numFilesBefore - 1) + " but it was " + numFilesAfter);
+                }
+                int originalIndex = fileIndex;
+                getSourceFiles(false);
+                if (numFilesAfter != filesList.size()) {
+                    throw new Exception("The number of files after " + moveType.actionDescription.toLowerCase() 
+                            + " was " + numFilesAfter + " but reading the source files again resulted in "
+                            + filesList.size() + " files");
+                }
+                fileIndex = originalIndex;
+            }
+            if (fileIndex > filesList.size() - 1) {
                 fileIndex = filesList.size() - 1;
             }
             fileActionsList.add(0, new FileAction(sourceFile, destination, moveType));
+            if ((moveType == FileMoveType.COPY
+                    || moveType == FileMoveType.COPY_CUSTOM)
+                    && filesList.size() > 0) {
+                //Move the file index to the next image, or wrap around to the beginning if at the end
+                fileIndex ++;
+                if (fileIndex > filesList.size() - 1) {
+                    fileIndex = 0;
+                }
+            }
             setImage();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Problem " + moveType.actionDescription.toLowerCase() + " file:  " + ex.getMessage(), 
@@ -1649,6 +1747,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         }
         jLabelStatus.setText(moveType.actionDescription + " Complete...");
         showStatus = true;
+        this.setCursor(Cursor.getDefaultCursor());
     }
 
     private void undoLastAction() {
@@ -1663,7 +1762,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
             if (!success) throw new Exception("Are you sure the destination and source are different?");
             Files.delete(lastAction.getTo());
             int originalIndex = fileIndex;
-            getSourceFiles();
+            getSourceFiles(false);
             fileIndex = originalIndex;
             //Figure out which index was undeleted
             for (int i = 0; i < filesList.size(); i++) {

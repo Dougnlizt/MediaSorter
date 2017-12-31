@@ -452,11 +452,15 @@ public class FileUtilities {
                 destPath.toFile().mkdirs();
             }
             // copy the file
-            Files.copy(srcPath, destPath,
+            Path targetPath = Files.copy(srcPath, destPath,
                     StandardCopyOption.REPLACE_EXISTING,
                     StandardCopyOption.COPY_ATTRIBUTES,
                     ExtendedCopyOption.INTERRUPTIBLE);
             
+            if (targetPath == destPath) {
+                return true;
+            }
+        } else {
             return true;
         }
         return false;
