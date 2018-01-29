@@ -7,11 +7,14 @@ package imageSorter;
 
 import imageSorter.CustomActionsDialog.CustomAction;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,9 +33,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -51,6 +59,7 @@ import static javax.swing.KeyStroke.getKeyStroke;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.MouseInputAdapter;
 
 /**
  *
@@ -772,7 +781,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 initializing = true;
-                new ImageSorterFrame().setVisible(true);
+                imageSorterFrame = new ImageSorterFrame();
+                imageSorterFrame.setVisible(true);
                 initializing = false;
             }
         });
@@ -824,6 +834,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldFilename;
     // End of variables declaration//GEN-END:variables
 
+    private static ImageSorterFrame imageSorterFrame;
     private final String homeDir = System.getProperty("user.home");
     private final String appName = "ImageSorter";
     private List<Path> selectSourceList = new ArrayList<>(); 
@@ -856,6 +867,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private final static int MAX_DIR_NAME_ITEMS = 20;
     private CustomActionsDialog customActionsDialog = null;
     private LocalDateTime sourceDirectoryTimeStamp = null;
+    private Map<JButton, CustomAction> customButtonActionMap = new TreeMap<>();
         
     private enum FileMoveType {
         MOVE("Move", "Moving"),
@@ -898,6 +910,11 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     //                         Allow scrollbars for the list of custom buttons
     //                         Show the wait cursor when performing an action
     //                         Correct issues with the custom dir name
+    //Version 2.2 Jan 29 2018: Do not advance to the next image when clicking on a custom location button
+    //                         Allow the order of the buttons to be modified/saved by dragging/dropping them
+    //                         When modifying the custom buttons, do not auto-resize the window (pack)
+    //Version 2.3 xxx xx 2018: Allow the option to use the date/time stamp of the file or of the file name, allowing
+    //                              the format within the filename to be specified (i.e. yyyymmdd).
     
     private void initMyComponents() {
         jPanelCustomActions.setLayout(new BoxLayout(jPanelCustomActions, BoxLayout.PAGE_AXIS));
@@ -931,7 +948,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         
         defaultFG_Color = jLabelDestination.getForeground();
         jCheckBoxAutoCreateDirs.setSelected(true);
-        setTitle("Image Sorter Version 2.1");
+        setTitle("Image Sorter Version 2.2 (Jan 2018)");
 
         jComboBoxSource.setMaximumRowCount(MAX_SOURCE_ITEMS);
         int selectedIndex = getPaths(sourceFileName, selectSourceList, MAX_SOURCE_ITEMS);
@@ -1070,7 +1087,8 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         jPanelCustomActions.add(gap, gbc);
         
         //gbc.insets = new Insets(10, 10, 10, 10);
-
+        customButtonActionMap = new HashMap<>();
+        
         for (int i = 0; i < customActions.size(); i++) {
             CustomAction customAction = customActions.get(i);
             if (!customAction.enabled) continue;
@@ -1083,14 +1101,26 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                     moveImage(getDestination(customAction.directory.toString(), FileMoveType.COPY_CUSTOM), FileMoveType.COPY_CUSTOM);
                 }
             });
+            DragListener drag = new DragListener();
+            customSaveButton.addMouseListener( drag );
+            customSaveButton.addMouseMotionListener( drag );
+            
             gbc.gridy = i + rowCount;
             jPanelCustomActions.add(customSaveButton, gbc);
-        }        
+            customButtonActionMap.put(customSaveButton, customAction);
+        }
+        
         jPanelCustomActions.revalidate();
         jPanelCustomActions.repaint();
         jScrollPane1.revalidate();
         jScrollPane1.repaint();
-        pack();
+        if (imageSorterFrame == null) {
+            pack();
+        } else {
+            //Rectangle dimensions = imageSorterFrame.getBounds();
+            //imageSorterFrame.pack();
+            //imageSorterFrame.setBounds(dimensions);
+        }
     }
     
     private int alpha = 255;
@@ -1730,8 +1760,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                 fileIndex = filesList.size() - 1;
             }
             fileActionsList.add(0, new FileAction(sourceFile, destination, moveType));
-            if ((moveType == FileMoveType.COPY
-                    || moveType == FileMoveType.COPY_CUSTOM)
+            if ((moveType == FileMoveType.COPY)
                     && filesList.size() > 0) {
                 //Move the file index to the next image, or wrap around to the beginning if at the end
                 fileIndex ++;
@@ -1808,6 +1837,70 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         public FileMoveType getMovementType() {
             return movementType;
         }
+        
+    }
+    
+    class DragListener extends MouseInputAdapter {
+        Point location;
+        MouseEvent pressed;
+ 
+        public void mousePressed(MouseEvent me)
+        {
+            pressed = me;
+        }
+
+        public void mouseDragged(MouseEvent me)
+        {
+            Component component = me.getComponent();
+            location = component.getLocation(location);
+            int x = location.x - pressed.getX() + me.getX();
+            int y = location.y - pressed.getY() + me.getY();
+            component.setLocation(x, y);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            super.mouseReleased(e); //To change body of generated methods, choose Tools | Templates.
+            //Go through the buttons, re-arrange the custom actions according to where the button is
+                //physically located
+            List<CustomAction> customActionsListTemp = new ArrayList<>();
+            List<CustomAction> customActions = customActionsDialog.getCustomActions();
+            //customActions.clear();
+            int index = 0;
+            Map<JButton, CustomAction> tempCustomButtonMap = new TreeMap<>(new Comparator<JButton>() {
+                @Override
+                public int compare(JButton o1, JButton o2) {
+                    if (o1.getY() > o2.getY()) {
+                        return 1;
+                    }
+                    if (o1.getY() < o2.getY()) {
+                        return -1;
+                    }
+                    return o1.getText().compareToIgnoreCase(o2.getText());
+                }
+            });
+            for (Map.Entry<JButton, CustomAction> entry : customButtonActionMap.entrySet()) {
+                JButton button = entry.getKey();
+                CustomAction action = entry.getValue();
+                tempCustomButtonMap.put(button, action);
+            }
+
+            for (Map.Entry<JButton, CustomAction> entry : tempCustomButtonMap.entrySet()) {
+                JButton button = entry.getKey();
+                CustomAction action = entry.getValue();
+                for (Iterator<CustomAction> iterator = customActions.iterator(); iterator.hasNext();) {
+                    CustomAction next = iterator.next();
+                    if (next == action) {
+                        iterator.remove();
+                        break;
+                    }
+                }
+                customActions.add(index, action);
+                index ++;
+            }
+            customActionsDialog.saveSortedActions();
+            initCustomActions();
+        }        
         
     }
 

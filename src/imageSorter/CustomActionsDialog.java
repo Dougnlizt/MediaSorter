@@ -465,6 +465,11 @@ public class CustomActionsDialog extends javax.swing.JDialog {
         return selectedIndex;
     }
     
+    public void saveSortedActions() {
+        saveCustomActions(sourceFileName);
+        initCustomActionComponents();
+    }
+    
     public List<CustomAction> getCustomActions() {
         return customActions;
     }
