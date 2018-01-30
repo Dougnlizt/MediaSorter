@@ -851,7 +851,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private final static String HIDE_TOP_PART = "Collapse the top componnet";
     private static boolean initializing = false;
     private static boolean processingComboBox = false;
-    private ArrayList<Path> filesList;
+    private ArrayList<Path> filesList = new ArrayList<>();
     private int fileIndex;
     private Color defaultFG_Color;
     private static final String NEW_LINE = System.lineSeparator();
