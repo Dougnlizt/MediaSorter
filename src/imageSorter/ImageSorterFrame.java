@@ -25,6 +25,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -128,6 +129,10 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenuItemUndo = new javax.swing.JMenuItem();
         jMenuItemRenameFile = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItemAbout = new javax.swing.JMenuItem();
+        jMenuItemWhy = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -543,7 +548,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
 
                     jMenu1.setText("File");
 
-                    jMenuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.ALT_MASK));
+                    jMenuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.ALT_DOWN_MASK));
                     jMenuItemExit.setText("Exit");
                     jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -556,7 +561,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
 
                     jMenu2.setText("Edit");
 
-                    jMenuItemUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_MASK));
+                    jMenuItemUndo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Z, java.awt.event.InputEvent.CTRL_DOWN_MASK));
                     jMenuItemUndo.setText("Undo");
                     jMenuItemUndo.addActionListener(new java.awt.event.ActionListener() {
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -565,7 +570,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                     });
                     jMenu2.add(jMenuItemUndo);
 
-                    jMenuItemRenameFile.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+                    jMenuItemRenameFile.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
                     jMenuItemRenameFile.setText("Rename File");
                     jMenuItemRenameFile.addActionListener(new java.awt.event.ActionListener() {
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -575,6 +580,34 @@ public class ImageSorterFrame extends javax.swing.JFrame {
                     jMenu2.add(jMenuItemRenameFile);
 
                     jMenuBar1.add(jMenu2);
+
+                    jMenu3.setText("Help");
+
+                    jMenuItemAbout.setText("About");
+                    jMenuItemAbout.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            jMenuItemAboutActionPerformed(evt);
+                        }
+                    });
+                    jMenu3.add(jMenuItemAbout);
+
+                    jMenuItemWhy.setText("Why Sort?");
+                    jMenuItemWhy.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            jMenuItemWhyActionPerformed(evt);
+                        }
+                    });
+                    jMenu3.add(jMenuItemWhy);
+
+                    jMenuItem1.setText("Google Doc Help");
+                    jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            jMenuItem1ActionPerformed(evt);
+                        }
+                    });
+                    jMenu3.add(jMenuItem1);
+
+                    jMenuBar1.add(jMenu3);
 
                     setJMenuBar(jMenuBar1);
 
@@ -750,6 +783,40 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         jLabelPrevious.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_jLabelPreviousMouseExited
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        try {
+            Desktop desktop = java.awt.Desktop.getDesktop();
+            URI oURL = new URI("https://docs.google.com/document/d/1g0XIvr30fK4GOX3qnk7Bhpxclh59YlcVjBl1jFNDJoc/edit?usp=sharing");
+            desktop.browse(oURL);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Unable to open the website",
+                    "Cannot Open Site", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAboutActionPerformed
+        About aboutDialog = new About(this, false);
+        aboutDialog.setAppName(PROGRAM_NAME);
+        aboutDialog.setDeveloper("Doug Thompson");
+        aboutDialog.setVersion(PROGRAM_VERSION);
+        aboutDialog.setLastUpdated(PROGRAM_VERSION_DATE);
+        aboutDialog.setImageSorter_Contact("dougnlizt@gmail.com");
+        aboutDialog.setWebsite("Program Site", "https://github.com/Dougnlizt/MediaSorter");
+        aboutDialog.setLocationRelativeTo(this);
+        aboutDialog.setVisible(true);
+    }//GEN-LAST:event_jMenuItemAboutActionPerformed
+
+    private void jMenuItemWhyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemWhyActionPerformed
+        try {
+            Desktop desktop = java.awt.Desktop.getDesktop();
+            URI oURL = new URI("https://docs.google.com/document/d/17xeqHYzf1AuRz8u1BCwX8gw0JQRoLXrEs1t9dc9LHf4/edit?usp=sharing");
+            desktop.browse(oURL);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Unable to open the website",
+                    "Cannot Open Site", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jMenuItemWhyActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -819,10 +886,14 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelYear;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItemAbout;
     private javax.swing.JMenuItem jMenuItemExit;
     private javax.swing.JMenuItem jMenuItemRenameFile;
     private javax.swing.JMenuItem jMenuItemUndo;
+    private javax.swing.JMenuItem jMenuItemWhy;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -834,6 +905,9 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldFilename;
     // End of variables declaration//GEN-END:variables
 
+    private final static String PROGRAM_NAME = "Image Sorter";
+    private final static String PROGRAM_VERSION = "2.3.0";
+    private final static String PROGRAM_VERSION_DATE = "6/21/2021";
     private static ImageSorterFrame imageSorterFrame;
     private final String homeDir = System.getProperty("user.home");
     private final String appName = "ImageSorter";
@@ -860,7 +934,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private ImageSorterFrame thisObject = null;
     private String imageExtensions = "jpgjpeggifpng";
     private String videoExtensions = "mp4mov";
-    private static final String PLAY_VIDEO_IMAGE_LOCATION = "ImageSorterPlayVideo.jpg"; //"playVideo.jpg"; //ImageSorterPlayVideo.jpg";
+    private static final String PLAY_VIDEO_IMAGE_LOCATION = "ImageSorterPlayVideo.jpg";
     private final static int MAX_SOURCE_ITEMS = 10;
     private final static int MAX_DEST_ITEMS = 10;
     private final static int MAX_DELETE_ITEMS = 10;
@@ -868,6 +942,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
     private CustomActionsDialog customActionsDialog = null;
     private LocalDateTime sourceDirectoryTimeStamp = null;
     private Map<JButton, CustomAction> customButtonActionMap = new TreeMap<>();
+    private int previousSelectedIndex = -1;
         
     private enum FileMoveType {
         MOVE("Move", "Moving"),
@@ -886,36 +961,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         
         
     }
-    //File - Exit
-    //Action - Undo
-    //Version 0.2 Feb 3rd 2017: Fixed an error of 'null' with the destination path that can occur
-    //                          Allow the custom dir to be used when not creating year/month in path
-    //                          Check for the destination file.  Prompt to continue if it exists.
-    //Version 0.3 Feb xx 2017: Change the splash screen...
-    //Version 1.0 Feb 21 2017: Include mp4 and mov files.  Allow images and videos to be opened in the 
-    //                         OS native tool for viewing/playing
-    //Version 2.0 Oct 14 2017: Change the 'Move' button to 'Copy' if the copy checkbox is selected
-    //                         When deleting, delete the source file even if the 'copy' checkbox is selected
-    //                         Save up to 20 previously selected Dir Name values, while allowing a type-in vlaue
-    //                         When looking for images, make the extension check case insensitive
-    //                         Add tooltips to provide additional descriptions
-    //                         Add the option to create customized additional locations to copy files to
-    //Version 2.1 Dec 30 2017: When adding custom actions, auto fill in the name of the button when selecting a new directory
-    //                         Add tooltips for the buttons in the custom actions dialog
-    //                         The play video image isn't showing.
-    //                         Neither is the splashscreen.
-    //                         Unable to overwrite (in deleted location)
-    //                         Allow the custom locations to be scrollable
-    //                         When selecting a new custom location, default to the last selected location
-    //                         Allow scrollbars for the list of custom buttons
-    //                         Show the wait cursor when performing an action
-    //                         Correct issues with the custom dir name
-    //Version 2.2 Jan 29 2018: Do not advance to the next image when clicking on a custom location button
-    //                         Allow the order of the buttons to be modified/saved by dragging/dropping them
-    //                         When modifying the custom buttons, do not auto-resize the window (pack)
-    //Version 2.3 xxx xx 2018: Allow the option to use the date/time stamp of the file or of the file name, allowing
-    //                              the format within the filename to be specified (i.e. yyyymmdd).
-    
+
     private void initMyComponents() {
         jPanelCustomActions.setLayout(new BoxLayout(jPanelCustomActions, BoxLayout.PAGE_AXIS));
         thisObject = this;
@@ -948,7 +994,7 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         
         defaultFG_Color = jLabelDestination.getForeground();
         jCheckBoxAutoCreateDirs.setSelected(true);
-        setTitle("Image Sorter Version 2.2 (Jan 2018)");
+        setTitle("Image Sorter Version 2.3 (June 2021)");
 
         jComboBoxSource.setMaximumRowCount(MAX_SOURCE_ITEMS);
         int selectedIndex = getPaths(sourceFileName, selectSourceList, MAX_SOURCE_ITEMS);
@@ -1284,13 +1330,25 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         boolean sourceUpdated = false;
         File sourceDir = Paths.get((String) jComboBoxSource.getSelectedItem()).toFile();
         if (sourceDir.isDirectory()) {
+            previousSelectedIndex = jComboBoxSource.getSelectedIndex();
             LocalDateTime sourceDirTimeStamp = LocalDateTime.ofInstant(Instant.ofEpochMilli(sourceDir.lastModified()), ZoneId.systemDefault());
             if (sourceDirectoryTimeStamp == null) {
                 sourceUpdated = true;
             } else {
-                sourceUpdated = sourceDirTimeStamp.isAfter(sourceDirectoryTimeStamp);
+                sourceUpdated = !sourceDirTimeStamp.isEqual(sourceDirectoryTimeStamp);
             }
             sourceDirectoryTimeStamp = sourceDirTimeStamp;
+        } else {
+            //Need to show a message that says it's not a directory
+            JOptionPane.showMessageDialog(this, "The '" + sourceDir.toString() + "' cannot be"
+                    + " found, may not be a directory.",
+                    "Invalid Directory", JOptionPane.WARNING_MESSAGE);
+            //Reset to the previous dir
+            if (previousSelectedIndex >= 0) {
+                jComboBoxSource.setSelectedIndex(previousSelectedIndex);
+            } else {
+                clearTextLabels();
+            }
         }
         return sourceUpdated;
     }
@@ -1360,14 +1418,19 @@ public class ImageSorterFrame extends javax.swing.JFrame {
         return imageExtensions.contains(ext);
     }
     
-    private void setNoImage() {
-        jLabelXofY.setText("No images in this directory");
+    private void clearTextLabels() {
+        jLabelXofY.setText(null);
         imageLabel.setImage(null);
         jTextFieldFilename.setText(null);
         jLabelFilenameExtension.setText(null);
         jLabelYear.setText(null);
         jLabelMonth.setText(null);
         jLabelDestination.setText(null);
+    }
+    
+    private void setNoImage() {
+        clearTextLabels();
+        jLabelXofY.setText("No images in this directory");
         String dirToDelete = (String) jComboBoxSource.getSelectedItem();
         Path deletePath = Paths.get(dirToDelete);
         String[] fileList = deletePath.toFile().list();

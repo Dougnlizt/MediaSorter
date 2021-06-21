@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Image Sorter Change History</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            }
+            #changesTable {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            #changesTable td, #changesTable th {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            #changesTable tr:nth-child(even){background-color: #f2f2f2;}
+
+            #changesTable tr:hover {background-color: #ddd;}
+
+            #changesTable th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #4CAF50;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div style='padding-bottom: 50px;'>This is a summary of changes made to the Image Sorter tool.</div>
+        
+        <table id='changesTable'>
+            <tr>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Version
+                </th>
+                <th>
+                    Notes
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    06/21/2021
+                </td>
+                <td>
+                    2.3.0
+                </td>
+                <td>
+                    <ul>
+                        <li>Allow the option to use the date/time stamp of the file or of the file name, allowing
+                                  the format within the filename to be specified (i.e. yyyymmdd).</li>
+                        <li>Fix an issue where the pictures list didn't refresh after selecting a folder</li>
+                        <li>Add about dialog and links to help documents</li>
+                        <li>Update images</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    01/29/2018
+                </td>
+                <td>
+                    2.2
+                </td>
+                <td>
+                    <ul>
+                        <li>Do not advance to the next image when clicking on a custom location button</li>
+                        <li>Allow the order of the buttons to be modified/saved by dragging/dropping them</li>
+                        <li>When modifying the custom buttons, do not auto-resize the window (pack)</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    12/30/2017
+                </td>
+                <td>
+                    2.1
+                </td>
+                <td>
+                    <ul>
+                        <li>When adding custom actions, auto fill in the name of the button when selecting a new directory</li>
+                        <li>Add tooltips for the buttons in the custom actions dialog</li>
+                        <li>The play video image isn't showing.</li>
+                        <li>Neither is the splashscreen.</li>
+                        <li>Unable to overwrite (in deleted location)</li>
+                        <li>Allow the custom locations to be scrollable</li>
+                        <li>When selecting a new custom location, default to the last selected location</li>
+                        <li>Allow scrollbars for the list of custom buttons</li>
+                        <li>Show the wait cursor when performing an action</li>
+                        <li>Correct issues with the custom dir name</li>
+                    </ul>
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    10/14/2017
+                </td>
+                <td>
+                    2.0
+                </td>
+                <td>
+                    <ul>
+                        <li>Change the 'Move' button to 'Copy' if the copy checkbox is selected</li>
+                        <li>When deleting, delete the source file even if the 'copy' checkbox is selected</li>
+                        <li>Save up to 20 previously selected Dir Name values, while allowing a type-in value</li>
+                        <li>When looking for images, make the extension check case insensitive</li>
+                        <li>Add tooltips to provide additional descriptions</li>
+                        <li>Add the option to create customized additional locations to copy files to</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    02/21/2017
+                </td>
+                <td>
+                    1.0
+                </td>
+                <td>
+                    <ul>
+                        <li>Include mp4 and mov files.  Allow images and videos to be opened in the 
+                            OS native tool for viewing/playing</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    02/xx/2017
+                </td>
+                <td>
+                    0.3
+                </td>
+                <td>
+                    <ul>
+                        <li>Change the splash screen...</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    02/03/2017
+                </td>
+                <td>
+                    0.2
+                </td>
+                <td>
+                    <ul>
+                        <li>Fixed an error of 'null' with the destination path that can occur</li>
+                        <li>Allow the custom dir to be used when not creating year/month in path</li>
+                        <li>Check for the destination file.  Prompt to continue if it exists.</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
